@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,17 +15,48 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   RegisterMahasiswaInput,
   registerMahasiswaSchema,
 } from "@/lib/schemas/mahasiswa-schema";
 import { postRegisterMahasiswa } from "@/services/client/mahasiswa-client-service";
+import { Eye, EyeOff } from "lucide-react";
+import { useSWRConfig } from "swr";
+
+const PRODI_MAP: Record<string, string[]> = {
+  "Jurusan Bisnis & Informatika": [
+    "Teknologi Rekayasa Perangkat Lunak",
+    "Bisnis Digital",
+    "Teknologi Rekayasa Komputer",
+  ],
+  "Jurusan Teknik Sipil": [
+    "Teknik Sipil",
+    "Teknologi Rekayasa Konstruksi Jalan dan Jembatan",
+  ],
+  "Jurusan Teknik Mesin": [
+    "Teknologi Rekayasa Manufaktur",
+    "Teknik Manufaktur Kapal",
+  ],
+  "Jurusan Pertanian": [
+    "Agribisnis",
+    "Teknologi Pengolahan Hasil Ternak",
+    "Pengembangan Produk Agroindustri",
+    "Teknologi Produksi Ternak",
+    "Teknologi Produksi Tanaman Pangan",
+    "Teknologi Budidaya Perikanan",
+  ],
+  "Jurusan Pariwisata": [
+    "Manajemen Bisnis Pariwisata",
+    "Destinasi Pariwisata",
+    "Pengelolaan Perhotelan",
+  ],
+};
 
 export function RegisterForm() {
-  const router = useRouter();
+  const { mutate } = useSWRConfig();
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<RegisterMahasiswaInput>({
     resolver: zodResolver(registerMahasiswaSchema as never),
@@ -36,9 +65,16 @@ export function RegisterForm() {
       name: "",
       email: "",
       password: "",
+      jurusan: "",
       prodi: "",
     },
   });
+
+  const selectedJurusan = useWatch({
+    control: form.control,
+    name: "jurusan",
+  });
+  const availableProdi = PRODI_MAP[selectedJurusan] || [];
 
   const onSubmit = async (values: RegisterMahasiswaInput) => {
     try {
@@ -48,7 +84,13 @@ export function RegisterForm() {
 
       form.reset();
       setOpen(false);
-      router.refresh();
+
+      mutate(
+        (key) => Array.isArray(key) && key[0] === "/api/admin/mahasiswa",
+        undefined,
+        { revalidate: true }
+      );
+
     } catch (error: unknown) {
       const err = error as Error;
       toast.error(err.message);
@@ -58,16 +100,14 @@ export function RegisterForm() {
   };
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      form.reset();
-    }
+    form.reset();
     setOpen(newOpen);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="font-bold">+ Tambah Mahasiswa</Button>
+        <Button className="font-bold cursor-pointer">+ Tambah Mahasiswa</Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
@@ -124,16 +164,54 @@ export function RegisterForm() {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-sm font-bold">Password Akun</Label>
-            <Input
-              {...form.register("password")}
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              disabled={isLoading}
-              className="h-10"
-            />
+            <div className="relative">
+              <Input
+                {...form.register("password")}
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                disabled={isLoading}
+                className="h-10 pr-10"
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                disabled={isLoading}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+                <span className="sr-only">Toggle password visibility</span>
+              </button>
+            </div>
             <p className="text-xs font-medium text-destructive mt-1">
               {form.formState.errors.password?.message}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="jurusan" className="text-sm font-bold">Jurusan</Label>
+            <select
+              {...form.register("jurusan", {
+                onChange: () => form.setValue("prodi", ""),
+              })}
+              id="jurusan"
+              disabled={isLoading}
+              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">Pilih Jurusan</option>
+              {Object.keys(PRODI_MAP).map((jurusanName) => (
+                <option key={jurusanName} value={jurusanName}>
+                  {jurusanName}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs font-medium text-destructive mt-1">
+              {form.formState.errors.jurusan?.message}
             </p>
           </div>
 
@@ -142,20 +220,22 @@ export function RegisterForm() {
             <select
               {...form.register("prodi")}
               id="prodi"
-              disabled={isLoading}
+              disabled={isLoading || !selectedJurusan}
               className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="">Pilih Program Studi</option>
-              <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
-              <option value="Teknik Komputer">Teknik Komputer</option>
-              <option value="Teknik Mesin">Teknik Mesin</option>
+              {availableProdi.map((prodiName) => (
+                <option key={prodiName} value={prodiName}>
+                  {prodiName}
+                </option>
+              ))}
             </select>
             <p className="text-xs font-medium text-destructive mt-1">
               {form.formState.errors.prodi?.message}
             </p>
           </div>
 
-          <Button type="submit" className="w-full h-11 font-bold mt-2" disabled={isLoading}>
+          <Button type="submit" className="w-full h-11 font-bold mt-2 cursor-pointer" disabled={isLoading}>
             {isLoading ? "Menyimpan Data..." : "Simpan Pendaftaran"}
           </Button>
         </form>

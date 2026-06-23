@@ -19,6 +19,7 @@ export const registerMahasiswaServer = async (payload: RegisterMahasiswaInput) =
         name: validatedData.name,
         email: validatedData.email,
         password: hashedPassword,
+        jurusan: validatedData.jurusan,
         prodi: validatedData.prodi,
       });
 
@@ -26,24 +27,39 @@ export const registerMahasiswaServer = async (payload: RegisterMahasiswaInput) =
   });
 };
 
-export const getMahasiswaListServer = async () => {
+export const getMahasiswaListServer = async (page: number = 1, limit: number = 10) => {
   return await APIHandler(async () => {
       await connectDB();
 
-      const data = await MahasiswaModel.find()
-        .select("_id nim name email prodi isActive")
-        .sort({ createdAt: -1 })
-        .lean();
+      const skip = (page - 1) * limit;
+
+      const [data, totalDocuments] = await Promise.all([
+        MahasiswaModel.find()
+          .select("_id nim name email jurusan prodi isActive")
+          .sort({ createdAt: -1 }) // Terbaru di atas
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+        MahasiswaModel.countDocuments()
+      ]);
 
       const formattedData: MahasiswaListItem[] = data.map((d) => ({
         _id: String(d._id),
         nim: String(d.nim),
         name: String(d.name),
         email: String(d.email),
+        jurusan: String(d.jurusan),
         prodi: String(d.prodi),
         isActive: Boolean(d.isActive),
       }));
 
-      return successRes("Berhasil memuat daftar mahasiswa", 200, formattedData);
+      return successRes("Berhasil memuat daftar mahasiswa", 200, {
+        list: formattedData,
+        meta: {
+          currentPage: page,
+          totalPages: Math.ceil(totalDocuments / limit),
+          totalItems: totalDocuments,
+        }
+      });
   });
 };

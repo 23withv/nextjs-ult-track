@@ -2,17 +2,19 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { loginSchema, loginUser } from "@/services/auth/auth-service";
-
+import { loginUser } from "@/services/auth/auth-service";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginSchema } from "@/lib/schemas/authSchema";
 
 export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fieldErrors, setFieldErrors] = useState<{ id?: string; password?: string }>({});
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,14 +76,30 @@ export function SignInForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password" className="text-sm font-bold">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          disabled={isLoading}
-          className={`h-11 ${fieldErrors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••••"
+            disabled={isLoading}
+            className={`h-11 pr-10 ${fieldErrors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
+          />
+          <button
+            type="button"
+            tabIndex={-1}
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+            disabled={isLoading}
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+            <span className="sr-only">Toggle password visibility</span>
+          </button>
+        </div>
         {fieldErrors.password && (
           <p className="text-xs font-medium text-destructive mt-1">{fieldErrors.password}</p>
         )}
@@ -93,7 +111,7 @@ export function SignInForm() {
         </div>
       )}
 
-      <Button type="submit" className="w-full h-11 font-bold text-base" disabled={isLoading}>
+      <Button type="submit" className="w-full h-11 font-bold text-base cursor-pointer" disabled={isLoading}>
         {isLoading ? "Memverifikasi..." : "Masuk ke Sistem"}
       </Button>
     </form>
