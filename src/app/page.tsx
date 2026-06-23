@@ -1,16 +1,16 @@
-import { ModeToggle } from "@/components/mode-toggle";
+import { Navbar } from "@/components/shared/navbar";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen w-full">
-      <div className="fixed top-4 right-4 z-50">
-        <ModeToggle />
-      </div>
-
-      <main className="flex min-h-screen flex-col items-center justify-center p-8">
-        <h1 className="text-4xl font-bold tracking-tight">ULT-Track</h1>
-        <p className="mt-2 text-muted-foreground">
-          Sistem Manajemen & Pelacakan Surat Kampus
+    <div className="relative min-h-screen w-full flex flex-col bg-background">
+      <Navbar />
+      <main className="flex flex-1 flex-col items-center justify-center p-8 text-center">
+        <h1 className="text-5xl font-black tracking-tight text-primary mb-4">
+          ULT-Track
+        </h1>
+        <p className="text-lg font-medium text-muted-foreground max-w-lg">
+          Sistem Manajemen & Pelacakan Surat Kampus terpadu untuk pelayanan yang
+          lebih cepat, transparan, dan terstruktur.
         </p>
       </main>
     </div>

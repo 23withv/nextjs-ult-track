@@ -5,6 +5,7 @@ export interface IMahasiswa extends Document {
   name: string;
   email: string;
   password: string;
+  jurusan: string;
   prodi: string;
   isActive: boolean;
   createdAt: Date;
@@ -23,10 +24,14 @@ export interface IAdmin extends Document {
 
 export interface ILetter extends Document {
   mahasiswaId: Types.ObjectId | IMahasiswa;
-  type: string;
+  type: "Surat Keterangan Aktif" | "Surat Pengantar Magang" | "Surat Pengajuan Cuti" | "Lainnya";
+  customTypeDetail?: string | null;
+  letterNumber?: string | null;
   purpose: string;
-  status: "Diajukan" | "Diproses" | "Siap Diambil" | "Selesai";
+  status: "Diajukan" | "Diproses" | "Siap Diambil" | "Selesai" | "Ditolak";
   verificationCode: string;
+  documentUrl?: string | null;
+  adminNotes?: string | null;
   delegatedTo?: Types.ObjectId | IMahasiswa | null;
   rejectionReason?: string | null;
   createdAt: Date;

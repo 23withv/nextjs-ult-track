@@ -19,11 +19,9 @@ export const authOptions: NextAuthOptions = {
 
         await connectDB();
 
-        // 1. Coba cari di Mahasiswa
         let user = await Mahasiswa.findOne({ nim: credentials.id });
         let role: "mahasiswa" | "admin_ult" = "mahasiswa";
 
-        // 2. Jika tidak ada, cari di Admin
         if (!user) {
           user = await Admin.findOne({ nip: credentials.id });
           role = "admin_ult";

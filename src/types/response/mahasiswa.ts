@@ -3,6 +3,7 @@ export interface MahasiswaListItem {
   nim: string;
   name: string;
   email: string;
+  jurusan: string;
   prodi: string;
   isActive: boolean;
 }

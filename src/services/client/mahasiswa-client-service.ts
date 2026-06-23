@@ -2,6 +2,12 @@ import axios, { AxiosError } from "axios";
 import { RegisterMahasiswaInput } from "@/lib/schemas/mahasiswa-schema";
 import { MahasiswaListItem } from "@/types/response/mahasiswa";
 
+export interface PaginationMeta {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+}
+
 export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
   try {
     const response = await axios.post("/api/admin/mahasiswa", data);
@@ -16,12 +22,13 @@ export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
   }
 };
 
-export const getMahasiswaList = async () => {
+export const getMahasiswaList = async (page: number = 1) => {
   try {
-    const response = await axios.get("/api/admin/mahasiswa");
+    const response = await axios.get(`/api/admin/mahasiswa?page=${page}`);
     return {
       message: String(response.data.message),
-      data: response.data.data as MahasiswaListItem[],
+      data: response.data.data.list as MahasiswaListItem[],
+      meta: response.data.data.meta as PaginationMeta,
     };
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;

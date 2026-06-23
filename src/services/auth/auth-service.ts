@@ -2,11 +2,7 @@ import { signIn } from "next-auth/react";
 import { APIHandler, SetError, successRes } from "@/lib/api-handler";
 import { validate } from "@/lib/zod-validator";
 import { z } from "zod";
-
-export const loginSchema = z.object({
-  id: z.string().min(3, "NIM/NIP wajib diisi"),
-  password: z.string().min(8, "Password minimal 8 karakter"),
-});
+import { loginSchema } from "@/lib/schemas/authSchema";
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
