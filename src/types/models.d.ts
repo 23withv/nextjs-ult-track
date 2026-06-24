@@ -1,5 +1,13 @@
 import { Document, Types } from "mongoose";
 
+// SUB
+export interface IMahasiswaInfo {
+  _id: Types.ObjectId | string;
+  nim: string;
+  name: string;
+}
+
+// MAIN 
 export interface IMahasiswa extends Document {
   nim: string;
   name: string;
@@ -22,17 +30,29 @@ export interface IAdmin extends Document {
   updatedAt: Date;
 }
 
+export interface IUnit extends Document {
+  name: string;
+  isDeleted: boolean;
+  createdAt: Date;
+}
+
+export interface ILetterType extends Document {
+  name: string;
+  isDeleted: boolean;
+  createdAt: Date;
+}
+
 export interface ILetter extends Document {
-  mahasiswaId: Types.ObjectId | IMahasiswa;
-  type: "Surat Keterangan Aktif" | "Surat Pengantar Magang" | "Surat Pengajuan Cuti" | "Lainnya";
+  mahasiswaInfo: IMahasiswaInfo;
+  targetUnit: string;
+  customTargetUnitDetail?: string | null;
+  type: string;
   customTypeDetail?: string | null;
   letterNumber?: string | null;
-  purpose: string;
   status: "Diajukan" | "Diproses" | "Siap Diambil" | "Selesai" | "Ditolak";
-  verificationCode: string;
   documentUrl?: string | null;
   adminNotes?: string | null;
-  delegatedTo?: Types.ObjectId | IMahasiswa | null;
+  delegateInfo?: IMahasiswaInfo | null;
   rejectionReason?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -41,7 +61,7 @@ export interface ILetter extends Document {
 export interface IHandoverLog extends Document {
   letterId: Types.ObjectId | ILetter;
   takenByOption: "pemohon_langsung" | "delegasi";
-  actualReceiverName: string;
+  receiverInfo: IMahasiswaInfo;
   evidenceUrl: string;
   processedBy: Types.ObjectId | IAdmin;
   createdAt: Date;

@@ -7,12 +7,15 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginSchema } from "@/lib/schemas/authSchema";
+import { loginSchema } from "@/lib/schemas/auth-schema";
 
 export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [fieldErrors, setFieldErrors] = useState<{ id?: string; password?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{
+    id?: string;
+    password?: string;
+  }>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -41,7 +44,7 @@ export function SignInForm() {
       const result = await loginUser(validation.data);
 
       if (result.status === 200) {
-        router.push("/admin/dashboard"); 
+        router.push("/admin/dashboard");
         router.refresh();
       } else {
         setServerError(result.message);
@@ -60,7 +63,9 @@ export function SignInForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="id" className="text-sm font-bold">NIM / NIP</Label>
+        <Label htmlFor="id" className="text-sm font-bold">
+          NIM / NIP
+        </Label>
         <Input
           id="id"
           name="id"
@@ -70,12 +75,16 @@ export function SignInForm() {
           className={`h-11 ${fieldErrors.id ? "border-destructive focus-visible:ring-destructive" : ""}`}
         />
         {fieldErrors.id && (
-          <p className="text-xs font-medium text-destructive mt-1">{fieldErrors.id}</p>
+          <p className="text-xs font-medium text-destructive mt-1">
+            {fieldErrors.id}
+          </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-sm font-bold">Password</Label>
+        <Label htmlFor="password" className="text-sm font-bold">
+          Password
+        </Label>
         <div className="relative">
           <Input
             id="password"
@@ -101,7 +110,9 @@ export function SignInForm() {
           </button>
         </div>
         {fieldErrors.password && (
-          <p className="text-xs font-medium text-destructive mt-1">{fieldErrors.password}</p>
+          <p className="text-xs font-medium text-destructive mt-1">
+            {fieldErrors.password}
+          </p>
         )}
       </div>
 
@@ -111,7 +122,11 @@ export function SignInForm() {
         </div>
       )}
 
-      <Button type="submit" className="w-full h-11 font-bold text-base cursor-pointer" disabled={isLoading}>
+      <Button
+        type="submit"
+        className="w-full h-11 font-bold text-base cursor-pointer"
+        disabled={isLoading}
+      >
         {isLoading ? "Memverifikasi..." : "Masuk ke Sistem"}
       </Button>
     </form>

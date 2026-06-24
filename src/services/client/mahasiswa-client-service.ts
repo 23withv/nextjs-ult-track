@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { RegisterMahasiswaInput } from "@/lib/schemas/mahasiswa-schema";
-import { MahasiswaListItem } from "@/types/response/mahasiswa";
+import { MahasiswaListItem } from "@/types/response/admin/mahasiswa";
 
 export interface PaginationMeta {
   currentPage: number;
@@ -14,10 +14,11 @@ export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
     return { message: String(response.data.message) };
   } catch (error: unknown) {
     console.error("[AXIOS_REGISTER_ERROR]:", error);
-    
+
     const axiosError = error as AxiosError<{ message: string }>;
-    const errorMessage = axiosError.response?.data?.message || "Koneksi jaringan terputus";
-    
+    const errorMessage =
+      axiosError.response?.data?.message || "Koneksi jaringan terputus";
+
     throw new Error(errorMessage);
   }
 };
@@ -32,7 +33,8 @@ export const getMahasiswaList = async (page: number = 1) => {
     };
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
-    const errorMessage = axiosError.response?.data?.message || "Gagal menghubungi peladen";
+    const errorMessage =
+      axiosError.response?.data?.message || "Gagal menghubungi peladen";
     throw new Error(errorMessage);
   }
 };

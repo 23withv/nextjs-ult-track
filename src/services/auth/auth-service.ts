@@ -2,7 +2,7 @@ import { signIn } from "next-auth/react";
 import { APIHandler, SetError, successRes } from "@/lib/api-handler";
 import { validate } from "@/lib/zod-validator";
 import { z } from "zod";
-import { loginSchema } from "@/lib/schemas/authSchema";
+import { loginSchema } from "@/lib/schemas/auth-schema";
 
 export type LoginInput = z.infer<typeof loginSchema>;
 

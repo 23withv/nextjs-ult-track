@@ -28,6 +28,8 @@ export function Sidebar({ role }: SidebarProps) {
   const adminLinks = [
     { href: "/admin/dashboard", label: "Dasbor", icon: LayoutDashboard },
     { href: "/admin/mahasiswa", label: "Kelola Mahasiswa", icon: Users },
+    { href: "/admin/surat", label: "Kelola Surat", icon: FileText },
+    { href: "/admin/pengaturan", label: "Pengaturan", icon: Menu },
   ]
 
   const mahasiswaLinks = [
