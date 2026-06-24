@@ -1,6 +1,15 @@
 import mongoose, { Schema, Model } from "mongoose";
 import { IHandoverLog } from "@/types/models";
 
+const MahasiswaInfoSchema = new Schema(
+  {
+    _id: { type: Schema.Types.ObjectId, ref: "Mahasiswa", required: true },
+    nim: { type: String, required: true, trim: true },
+    name: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
 const HandoverLogSchema = new Schema<IHandoverLog>(
   {
     letterId: {
@@ -14,7 +23,7 @@ const HandoverLogSchema = new Schema<IHandoverLog>(
       enum: ["pemohon_langsung", "delegasi"],
       required: true,
     },
-    actualReceiverName: { type: String, required: true, trim: true },
+    receiverInfo: { type: MahasiswaInfoSchema, required: true },
     evidenceUrl: { type: String, required: true },
     processedBy: {
       type: Schema.Types.ObjectId,
