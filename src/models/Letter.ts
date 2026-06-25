@@ -17,6 +17,7 @@ const LetterSchema = new Schema<ILetter>(
     customTargetUnitDetail: { type: String, default: null, trim: true },
     type: { type: String, required: true },
     customTypeDetail: { type: String, default: null, trim: true },
+    mahasiswaNote: { type: String, default: null, trim: true },
     letterNumber: { type: String, default: null, trim: true },
     status: {
       type: String,

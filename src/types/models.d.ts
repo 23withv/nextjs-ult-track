@@ -48,6 +48,7 @@ export interface ILetter extends Document {
   customTargetUnitDetail?: string | null;
   type: string;
   customTypeDetail?: string | null;
+  mahasiswaNote?: string | null;
   letterNumber?: string | null;
   status: "Diajukan" | "Diproses" | "Siap Diambil" | "Selesai" | "Ditolak";
   documentUrl?: string | null;
@@ -62,7 +63,8 @@ export interface IHandoverLog extends Document {
   letterId: Types.ObjectId | ILetter;
   takenByOption: "pemohon_langsung" | "delegasi";
   receiverInfo: IMahasiswaInfo;
-  evidenceUrl: string;
+  evidenceUrl?: string;
+  evidencePublicId?: string;
   processedBy: Types.ObjectId | IAdmin;
   createdAt: Date;
   updatedAt: Date;

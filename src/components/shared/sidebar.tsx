@@ -35,6 +35,7 @@ export function Sidebar({ role }: SidebarProps) {
   const mahasiswaLinks = [
     { href: "/mahasiswa/dashboard", label: "Dasbor", icon: LayoutDashboard },
     { href: "/mahasiswa/surat", label: "Pengajuan Surat", icon: FileText },
+    { href: "/mahasiswa/delegate", label: "Delegasi", icon: FileText },
   ]
 
   const links = role === "admin" ? adminLinks : mahasiswaLinks

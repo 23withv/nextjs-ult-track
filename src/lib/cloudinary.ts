@@ -42,7 +42,7 @@ async function performUpload(buffer: Buffer, folder: string) {
     cloudinary.uploader
       .upload_stream(
         {
-          folder: `web-portofolio/${folder}`,
+          folder: `ult_track/${folder}`,
           resource_type: "image",
         },
         (error, result) => {

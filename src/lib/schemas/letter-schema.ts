@@ -5,6 +5,7 @@ export const createLetterSchema = z.object({
   customTargetUnitDetail: z.string().optional(),
   type: z.string().min(1, "Jenis surat wajib dipilih"),
   customTypeDetail: z.string().optional(),
+  mahasiswaNote: z.string().optional(),
 })
 .refine(
   (data) => !(data.targetUnit === "Lainnya" && (!data.customTargetUnitDetail || data.customTargetUnitDetail.trim() === "")),

@@ -24,7 +24,8 @@ const HandoverLogSchema = new Schema<IHandoverLog>(
       required: true,
     },
     receiverInfo: { type: MahasiswaInfoSchema, required: true },
-    evidenceUrl: { type: String, required: true },
+    evidenceUrl: { type: String, default: null },
+    evidencePublicId: { type: String, default: null },
     processedBy: {
       type: Schema.Types.ObjectId,
       ref: "Admin",
