@@ -101,6 +101,16 @@ export function CreateLetterForm() {
               <Input {...form.register("customTypeDetail")} disabled={isLoading} className="h-10" placeholder="Sebutkan jenis surat..." />
             </div>
           )}
+          
+          <div className="space-y-2">
+            <Label className="text-sm font-bold">Catatan Tambahan (Opsional)</Label>
+            <Input 
+              {...form.register("mahasiswaNote")} 
+              disabled={isLoading} 
+              className="h-10" 
+              placeholder="Misal: Keperluan Lomba Debat Nasional / UKM Robotika" 
+            />
+          </div>
 
           <Button type="submit" className="w-full h-11 font-bold mt-4" disabled={isLoading}>
             {isLoading ? "Memproses..." : "Ajukan Surat"}

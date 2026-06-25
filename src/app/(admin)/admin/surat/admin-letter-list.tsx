@@ -3,11 +3,16 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { toast } from "sonner";
-import { getAdminLetters } from "@/services/client/admin-letter-client-service";
+import { FileText, Clock, CheckCircle2, Inbox } from "lucide-react";
+import { getAdminLetters, getAdminLetterStats } from "@/services/client/admin-letter-client-service";
 import { AdminLetterListItem } from "@/types/response/admin/letter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { AdminProcessDialog } from "./admin-process-letter";
+import { AdminHandoverDialog } from "./admin-handover-dialog";
+import { AdminSuratAction } from "./admin-surat-action";
 
 const STATUS_FILTERS = ["All", "Diajukan", "Diproses", "Siap Diambil", "Selesai", "Ditolak"] as const;
 type FilterStatus = typeof STATUS_FILTERS[number];
@@ -26,7 +31,11 @@ const getStatusBadgeVariant = (status: string) => {
 export function AdminLetterList() {
   const [page, setPage] = useState<number>(1);
   const [selectedStatus, setSelectedStatus] = useState<FilterStatus>("Diajukan");
-  const { data: responseData, error, isLoading } = useSWR(
+  
+  const [selectedLetter, setSelectedLetter] = useState<AdminLetterListItem | null>(null);
+  const [selectedHandoverLetter, setSelectedHandoverLetter] = useState<AdminLetterListItem | null>(null);
+
+  const { data: responseData, error: listError, isLoading: listLoading } = useSWR(
     ["/api/admin/letters", page, selectedStatus],
     ([, pageArg, statusArg]) => getAdminLetters(pageArg as number, statusArg as string),
     {
@@ -36,11 +45,87 @@ export function AdminLetterList() {
     }
   );
 
+  const { data: stats, isLoading: statsLoading } = useSWR(
+    "/api/admin/letters/stats",
+    getAdminLetterStats,
+    { refreshInterval: 10000 }
+  );
+
   const list: AdminLetterListItem[] = responseData?.list || [];
   const meta = responseData?.meta || { currentPage: 1, totalPages: 1, totalItems: 0 };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 mt-6">
+      <AdminProcessDialog 
+        letter={selectedLetter} 
+        isOpen={!!selectedLetter} 
+        onClose={() => setSelectedLetter(null)} 
+      />
+      <AdminHandoverDialog 
+        letter={selectedHandoverLetter} 
+        isOpen={!!selectedHandoverLetter} 
+        onClose={() => setSelectedHandoverLetter(null)} 
+      />
+
+      {statsLoading ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+        </div>
+      ) : stats ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="shadow-sm border-border/50 bg-card">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="p-3 bg-primary/10 text-primary rounded-lg">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-medium">Total Dokumen</p>
+                <h4 className="text-xl font-black">{stats.total}</h4>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-sm border-border/50 bg-card">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="p-3 bg-amber-500/10 text-amber-600 rounded-lg">
+                <Clock className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-medium">Perlu Diproses</p>
+                <h4 className="text-xl font-black">{stats.diproses}</h4>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm border-border/50 bg-card">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="p-3 bg-blue-500/10 text-blue-600 rounded-lg">
+                <Inbox className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-medium">Siap Diambil</p>
+                <h4 className="text-xl font-black">{stats.siap}</h4>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm border-border/50 bg-card">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="p-3 bg-emerald-500/10 text-emerald-600 rounded-lg">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-medium">Selesai/Riwayat</p>
+                <h4 className="text-xl font-black">{stats.riwayat}</h4>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap gap-2 items-center justify-between bg-muted/30 p-2.5 rounded-lg border border-border/50">
         <div className="flex items-center gap-1.5 overflow-x-auto">
           <span className="text-xs font-bold uppercase text-muted-foreground mr-1">Antrean:</span>
@@ -48,7 +133,7 @@ export function AdminLetterList() {
             <button
               key={st}
               onClick={() => { setSelectedStatus(st); setPage(1); }}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                 selectedStatus === st
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-background text-foreground hover:bg-muted"
@@ -60,7 +145,7 @@ export function AdminLetterList() {
         </div>
 
         <div className="text-xs text-muted-foreground font-medium px-1 mt-2 sm:mt-0">
-          Total Dokumen: <strong className="text-foreground font-mono">{meta.totalItems}</strong>
+          Total: <strong className="text-foreground font-mono">{meta.totalItems}</strong> Data
         </div>
       </div>
 
@@ -79,13 +164,13 @@ export function AdminLetterList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
-                {isLoading && list.length === 0 ? (
+                {listLoading && list.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="h-32 text-center text-muted-foreground text-sm font-medium">
                       Memuat antrean dokumen...
                     </td>
                   </tr>
-                ) : error ? (
+                ) : listError ? (
                   <tr>
                     <td colSpan={6} className="h-32 text-center text-destructive font-bold text-sm">
                       Gagal terhubung ke database.
@@ -117,19 +202,30 @@ export function AdminLetterList() {
                         </div>
                       </td>
                       <td className="px-6 py-4 font-bold">{item.targetUnit}</td>
-                      <td className="px-6 py-4">{item.type}</td>
                       <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-medium">{item.type}</span>
+                          {item.mahasiswaNote && item.mahasiswaNote !== "-" && (
+                            <span className="text-xs text-muted-foreground mt-1 italic">
+                              {item.mahasiswaNote}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <Badge variant={getStatusBadgeVariant(item.status)}>
                           {item.status}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 text-center">
-                        <button 
-                          onClick={() => toast.info(`Aksi untuk ${item.letterNumber} di sini`)}
-                          className="text-xs font-black text-primary hover:underline cursor-pointer"
-                        >
-                          Proses
-                        </button>
+                      <td className="px-6 py-4 text-center align-middle">
+                        <AdminSuratAction 
+                          item={item}
+                          onProcess={(selected) => setSelectedLetter(selected)}
+                          onHandover={(selected) => setSelectedHandoverLetter(selected)}
+                          onDetail={(selected) => {
+                            toast.info(`Menampilkan detail resi: ${selected.letterNumber}`);
+                          }}
+                        />
                       </td>
                     </tr>
                   ))
