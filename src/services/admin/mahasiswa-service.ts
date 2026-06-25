@@ -35,20 +35,26 @@ export const registerMahasiswaServer = async (
 export const getMahasiswaListServer = async (
   page: number = 1,
   limit: number = 10,
+  jurusan?: string,
+  prodi?: string
 ) => {
   return await APIHandler(async () => {
     await connectDB();
 
+    const query: Record<string, unknown> = {};
+    if (jurusan) query.jurusan = { $regex: jurusan, $options: "i" };
+    if (prodi) query.prodi = { $regex: prodi, $options: "i" };
+
     const skip = (page - 1) * limit;
 
     const [data, totalDocuments] = await Promise.all([
-      MahasiswaModel.find()
+      MahasiswaModel.find(query)
         .select("_id nim name email jurusan prodi isActive")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
-      MahasiswaModel.countDocuments(),
+      MahasiswaModel.countDocuments(query),
     ]);
 
     const formattedData: MahasiswaListItem[] = data.map((d) => ({
@@ -69,5 +75,21 @@ export const getMahasiswaListServer = async (
         totalItems: totalDocuments,
       },
     });
+  });
+};
+
+export const getMahasiswaStatsServer = async (jurusan?: string, prodi?: string) => {
+  return await APIHandler(async () => {
+    await connectDB();
+
+    const query: Record<string, unknown> = {};
+    if (jurusan) query.jurusan = { $regex: jurusan, $options: "i" };
+    if (prodi) query.prodi = { $regex: prodi, $options: "i" };
+
+    const total = await MahasiswaModel.countDocuments(query);
+    const active = await MahasiswaModel.countDocuments({ ...query, isActive: true });
+    const inactive = total - active;
+
+    return successRes("Berhasil memuat statistik", 200, { total, active, inactive });
   });
 };

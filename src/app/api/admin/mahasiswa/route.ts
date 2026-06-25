@@ -18,15 +18,20 @@ export async function POST(req: NextRequest) {
   });
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   return RouteHandler(async () => {
-    const response = await getMahasiswaListServer();
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const jurusan = searchParams.get("jurusan") || undefined;
+    const prodi = searchParams.get("prodi") || undefined;
 
+    const response = await getMahasiswaListServer(page, 10, jurusan, prodi);
+    
     return NextResponse.json(
-      {
-        message: response.message,
-        ...("data" in response ? { data: response.data } : {}),
-      },
+      { 
+        message: response.message, 
+        data: 'data' in response ? response.data : null 
+      }, 
       { status: response.status }
     );
   });
