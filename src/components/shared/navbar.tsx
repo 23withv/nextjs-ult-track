@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
-import { User, LogOut, LayoutDashboard, UserCircle } from "lucide-react";
+import { User, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
@@ -61,20 +61,6 @@ export function Navbar() {
                   >
                     <LayoutDashboard className="h-4 w-4" />
                     <span>Dasbor</span>
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={
-                      session.user.role === "admin_ult"
-                        ? "/admin/profile"
-                        : "/mahasiswa/profile"
-                    }
-                    className="flex items-center space-x-2 w-full cursor-pointer"
-                  >
-                    <UserCircle className="h-4 w-4" />
-                    <span>Profil Saya</span>
                   </Link>
                 </DropdownMenuItem>
 

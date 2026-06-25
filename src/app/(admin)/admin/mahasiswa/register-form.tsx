@@ -23,7 +23,7 @@ import { postRegisterMahasiswa } from "@/services/client/mahasiswa-client-servic
 import { Eye, EyeOff } from "lucide-react";
 import { useSWRConfig } from "swr";
 
-const PRODI_MAP: Record<string, string[]> = {
+export const PRODI_MAP: Record<string, string[]> = {
   "Jurusan Bisnis & Informatika": [
     "Teknologi Rekayasa Perangkat Lunak",
     "Bisnis Digital",

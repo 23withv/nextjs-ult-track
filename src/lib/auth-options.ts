@@ -6,7 +6,8 @@ import Mahasiswa from "@/models/Mahasiswa";
 import Admin from "@/models/Admin";
 
 export const authOptions: NextAuthOptions = {
-  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60, updateAge: 24 * 60 * 60 },
+  jwt: { maxAge: 24 * 60 * 60 },
   providers: [
     CredentialsProvider({
       name: "Credentials",

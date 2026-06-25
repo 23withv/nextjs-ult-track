@@ -13,8 +13,9 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status") || undefined;
+    const resi = searchParams.get("resi") || undefined;
 
-    const response = await getAdminLetterListServer(page, limit, status);
+    const response = await getAdminLetterListServer(page, limit, status, resi);
 
     if ('data' in response) {
       return NextResponse.json(

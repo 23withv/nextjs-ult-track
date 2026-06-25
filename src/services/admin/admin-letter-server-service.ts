@@ -1,11 +1,13 @@
 import { connectDB } from "@/lib/db";
 import LetterModel from "@/models/Letter";
 import { APIHandler, SetError, successRes } from "@/lib/api-handler";
+import HandoverLogModel from "@/models/HandoverLog";
 
 export const getAdminLetterListServer = async (
   page: number = 1,
   limit: number = 10,
-  statusFilter?: string
+  statusFilter?: string,
+  resi?: string
 ) => {
   return await APIHandler(async () => {
     await connectDB();
@@ -13,6 +15,10 @@ export const getAdminLetterListServer = async (
     const query: Record<string, unknown> = {};
     if (statusFilter && statusFilter !== "All") {
       query.status = statusFilter;
+    }
+
+    if (resi) {
+      query.letterNumber = { $regex: resi, $options: "i" };
     }
 
     const skip = (page - 1) * limit;
@@ -112,5 +118,24 @@ export const getAdminLetterStatsServer = async () => {
     });
 
     return successRes("Berhasil memuat statistik admin", 200, formattedStats);
+  });
+};
+
+export const getAdminLetterDetailServer = async (letterId: string) => {
+  return await APIHandler(async () => {
+    await connectDB();
+
+    const letter = await LetterModel.findById(letterId).lean();
+    if (!letter) throw new SetError("Surat tidak ditemukan", 404);
+
+    let handoverLog = null;
+    if (letter.status === "Selesai") {
+      handoverLog = await HandoverLogModel.findOne({ letterId: letter._id }).lean();
+    }
+
+    return successRes("Data detail surat dimuat", 200, {
+      letter: { ...letter, _id: String(letter._id) },
+      handover: handoverLog ? { ...handoverLog, _id: String(handoverLog._id) } : null,
+    });
   });
 };
