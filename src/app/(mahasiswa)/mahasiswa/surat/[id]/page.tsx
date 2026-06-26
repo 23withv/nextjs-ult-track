@@ -13,9 +13,5 @@ interface Props {
 export default async function DetailSuratPage({ params }: Props) {
   const { id } = await params;
 
-  return (
-    <div className="container mx-auto p-4 md:p-6 lg:p-8">
-      <DetailSuratClient letterId={id} />
-    </div>
-  );
+  return <DetailSuratClient letterId={id} />;
 }

@@ -144,11 +144,11 @@ export function MahasiswaList() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={handleApplyFilter} className="flex-1 gap-2">
+          <Button onClick={handleApplyFilter} className="flex-1 gap-2 cursor-pointer">
             <Search className="w-4 h-4" /> Cari
           </Button>
           {(appliedJurusan || appliedProdi) && (
-            <Button onClick={handleResetFilter} variant="outline">Reset</Button>
+            <Button onClick={handleResetFilter} className="cursor-pointer" variant="outline">Reset</Button>
           )}
         </div>
       </div>
