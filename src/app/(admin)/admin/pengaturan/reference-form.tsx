@@ -44,6 +44,7 @@ export function ReferenceList({ type, label }: Props) {
       success: () => {
         setName("");
         setOpen(false);
+        // Picu revalidasi cache SWR untuk memperbarui tabel data
         mutate(`/api/admin/references/${type}`);
         return `${label} berhasil ditambahkan.`;
       },
@@ -59,6 +60,7 @@ export function ReferenceList({ type, label }: Props) {
     toast.promise(promise, {
       loading: `Menghapus ${name}...`,
       success: () => {
+        // Picu revalidasi cache SWR untuk memperbarui tabel data
         mutate(`/api/admin/references/${type}`);
         return `${name} berhasil dihapus.`;
       },

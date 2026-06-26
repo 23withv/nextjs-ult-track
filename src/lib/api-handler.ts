@@ -33,6 +33,7 @@ export const APIHandler = async <T>(
 ) => {
   try {
     return await fn();
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     if (onError) {
       try {
@@ -57,6 +58,7 @@ export const APIHandler = async <T>(
 export const RouteHandler = async (fn: () => Promise<NextResponse>) => {
   try {
     return await fn();
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     console.error("[ROUTE_HANDLER_ERROR]:", error);
     if (error instanceof ValidationError) {

@@ -8,6 +8,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 
 export const loginUser = async (payload: LoginInput) => {
   return await APIHandler(async () => {
+    // Validasi struktur payload menggunakan skema Zod
     const validatedData = validate(loginSchema, payload);
 
     // Panggil NextAuth untuk proses otentikasi kredensial

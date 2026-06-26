@@ -7,6 +7,7 @@ export const postCreateLetter = async (data: CreateLetterInput) => {
     // Eksekusi HTTP POST payload pengajuan surat ke internal API
     const response = await axios.post("/api/mahasiswa/letters", data);
     return { message: String(response.data.message) };
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(
@@ -20,6 +21,7 @@ export const getMahasiswaLetters = async () => {
     // Eksekusi HTTP GET untuk mengambil seluruh riwayat surat mahasiswa
     const response = await axios.get("/api/mahasiswa/letters");
     return (response.data.data as LetterListItem[]) || [];
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(
@@ -43,6 +45,7 @@ export const getMahasiswaLetterDetail = async (id: string) => {
     // Eksekusi HTTP GET untuk mengambil rincian data surat spesifik
     const response = await axios.get(`/api/mahasiswa/letters/${id}`);
     return response.data.data;
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(
@@ -56,6 +59,7 @@ export const patchAssignDelegate = async (letterId: string, delegateNim: string)
     // Eksekusi HTTP PATCH payload delegasi pengurusan surat
     const response = await axios.patch(`/api/mahasiswa/letters/${letterId}/delegate`, { nim: delegateNim });
     return { message: String(response.data.message) };
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(axiosError.response?.data?.message || "Gagal menunjuk delegasi");
@@ -67,6 +71,7 @@ export const getDelegatedLetters = async () => {
     // Eksekusi HTTP GET untuk mengambil daftar surat terdelegasi
     const response = await axios.get("/api/mahasiswa/delegates");
     return (response.data.data as DelegatedLetterItem[]) || [];
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(

@@ -67,6 +67,7 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
       });
 
       toast.success("Dokumen berhasil diserahkan");
+      // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate((key) => Array.isArray(key) && key[0] === "/api/admin/letters");
       handleClose();
     } catch {

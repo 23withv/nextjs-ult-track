@@ -6,6 +6,7 @@ import { getAdminDashboardStatsServer } from "@/services/admin/admin-dash-server
 
 export async function GET(req: NextRequest) {
   return RouteHandler(async () => {
+    // Verifikasi sesi aktif dan otorisasi role pengguna
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== "admin_ult") throw new SetError("Unauthorized", 401);
 

@@ -11,6 +11,7 @@ export async function GET(_req: NextRequest, { params }: { params: Params }) {
   const { nim } = await params;
 
   return RouteHandler(async () => {
+    // Verifikasi sesi aktif dan otorisasi role pengguna
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("Unauthorized access");
 

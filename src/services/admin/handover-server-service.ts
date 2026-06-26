@@ -51,6 +51,7 @@ export const processHandoverServer = async (
 
       return successRes("Dokumen berhasil diserahkan", 200);
 
+    // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
     } catch (error) {
       console.error("[HANDOVER_DB_ERROR]", error);
 

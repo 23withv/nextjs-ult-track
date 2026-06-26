@@ -86,6 +86,7 @@ export function RegisterForm() {
       form.reset();
       setOpen(false);
 
+      // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate(
         (key) => Array.isArray(key) && key[0] === "/api/admin/mahasiswa",
         undefined,

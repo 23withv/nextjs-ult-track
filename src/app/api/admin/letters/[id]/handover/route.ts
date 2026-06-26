@@ -10,6 +10,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
   const { id } = await params;
 
   return RouteHandler(async () => {
+    // Verifikasi sesi aktif dan otorisasi role pengguna
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) throw new SetError("Akses ditolak", 401);
 
