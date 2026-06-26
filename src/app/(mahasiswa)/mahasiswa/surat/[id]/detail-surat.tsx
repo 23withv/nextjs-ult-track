@@ -86,6 +86,7 @@ export function DetailSuratClient({ letterId }: Props) {
       setIsDelegateOpen(false);
       setSearchNim("");
       setFoundDelegate(null);
+      // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate(`/api/mahasiswa/letters/${letterId}`);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Gagal menunjuk delegasi";

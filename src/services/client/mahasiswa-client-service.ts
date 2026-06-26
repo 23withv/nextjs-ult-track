@@ -13,6 +13,7 @@ export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
     // Eksekusi HTTP POST payload registrasi data mahasiswa baru
     const response = await axios.post("/api/admin/mahasiswa", data);
     return { message: String(response.data.message) };
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     console.error("[AXIOS_REGISTER_ERROR]:", error);
 
@@ -35,6 +36,7 @@ export const getMahasiswaList = async (page: number = 1, jurusan: string = "", p
       data: response.data.data.list as MahasiswaListItem[],
       meta: response.data.data.meta as PaginationMeta,
     };
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     const errorMessage = axiosError.response?.data?.message || "Gagal menghubungi peladen";

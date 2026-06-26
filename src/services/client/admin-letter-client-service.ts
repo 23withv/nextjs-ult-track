@@ -14,6 +14,7 @@ export const getAdminLetters = async (page: number, status: string, resi: string
     const response = await axios.get(`/api/admin/letters?${params.toString()}`);
     
     return response.data.data as AdminLetterListResponse;
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(axiosError.response?.data?.message || "Gagal memuat data persuratan admin");
@@ -25,6 +26,7 @@ export const getAdminLetterStats = async () => {
     // Eksekusi HTTP GET untuk mengambil agregasi statistik surat admin
     const response = await axios.get("/api/admin/letters/stats");
     return response.data.data;
+  // Tangkap dan terjemahkan exception mentah untuk dikembalikan ke lapisan atas
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     throw new Error(axiosError.response?.data?.message || "Gagal memuat statistik");

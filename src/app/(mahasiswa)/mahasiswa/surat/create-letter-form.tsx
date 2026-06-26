@@ -47,6 +47,7 @@ export function CreateLetterForm() {
       toast.success(result.message);
       form.reset();
       setOpen(false);
+      // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate("/api/mahasiswa/letters");
     } catch (error: unknown) {
       const err = error as Error;

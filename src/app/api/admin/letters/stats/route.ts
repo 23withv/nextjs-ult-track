@@ -6,6 +6,7 @@ import { getAdminLetterStatsServer } from "@/services/admin/admin-letter-server-
 
 export async function GET() {
   return RouteHandler(async () => {
+    // Verifikasi sesi aktif dan otorisasi role pengguna
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) throw new SetError("Unauthorized access", 401);
 

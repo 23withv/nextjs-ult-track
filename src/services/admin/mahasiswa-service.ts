@@ -15,6 +15,7 @@ export const registerMahasiswaServer = async (
   payload: RegisterMahasiswaInput,
 ) => {
   return await APIHandler(async () => {
+    // Validasi struktur payload menggunakan skema Zod
     const validatedData = validate(registerMahasiswaSchema, payload);
     await connectDB();
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
