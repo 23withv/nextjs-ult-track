@@ -147,8 +147,8 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" onClick={handleClose} disabled={isLoading}>Batal</Button>
-          <Button onClick={handleSave} disabled={isLoading}>
+          <Button variant="outline" className="cursor-pointer" onClick={handleClose} disabled={isLoading}>Batal</Button>
+          <Button className="cursor-pointer" onClick={handleSave} disabled={isLoading}>
             {isLoading ? "Memproses..." : "Selesaikan & Serahkan"}
           </Button>
         </div>

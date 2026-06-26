@@ -7,8 +7,6 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { id } = await params;
   return (
-    <div className="container mx-auto p-4">
-      <DetailAdminSuratClient letterId={id} />
-    </div>
+    <DetailAdminSuratClient letterId={id} />
   );
 }

@@ -94,7 +94,7 @@ export function DetailSuratClient({ letterId }: Props) {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 max-w-3xl mx-auto animate-pulse">
+      <div className="space-y-6 animate-pulse">
         <Skeleton className="w-32 h-10" />
         <Skeleton className="w-full h-64" />
       </div>
@@ -103,7 +103,7 @@ export function DetailSuratClient({ letterId }: Props) {
 
   if (error || !data) {
     return (
-      <div className="text-center p-10 max-w-3xl mx-auto">
+      <div className="text-center p-10">
         <h2 className="text-xl font-bold text-destructive">
           Gagal memuat data
         </h2>
@@ -123,7 +123,7 @@ export function DetailSuratClient({ letterId }: Props) {
   const { letter, handover } = data;
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-6">
       <Dialog open={isDelegateOpen} onOpenChange={(open) => {
         setIsDelegateOpen(open);
         if (!open) { setSearchNim(""); setFoundDelegate(null); }
@@ -144,7 +144,7 @@ export function DetailSuratClient({ letterId }: Props) {
                 onKeyDown={(e) => e.key === "Enter" && handleSearchDelegate()}
                 disabled={isSearching || isAssigning}
               />
-              <Button onClick={handleSearchDelegate} disabled={isSearching || isAssigning || !searchNim}>
+              <Button className="cursor-pointer" onClick={handleSearchDelegate} disabled={isSearching || isAssigning || !searchNim}>
                 {isSearching ? "Mencari..." : <Search className="w-4 h-4" />}
               </Button>
             </div>
@@ -155,7 +155,7 @@ export function DetailSuratClient({ letterId }: Props) {
                 <p className="font-bold text-sm">{foundDelegate.name}</p>
                 <p className="text-xs text-muted-foreground">{foundDelegate.prodi}</p>
                 <Button 
-                  className="w-full mt-3" 
+                  className="w-full mt-3 cursor-pointer" 
                   onClick={handleAssignDelegate}
                   disabled={isAssigning}
                 >
@@ -171,7 +171,7 @@ export function DetailSuratClient({ letterId }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-4 mb-2 text-muted-foreground hover:text-foreground"
+            className="-ml-4 mb-2 text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Kembali
@@ -187,7 +187,7 @@ export function DetailSuratClient({ letterId }: Props) {
             </p>
           </div>
           {letter.status === "Siap Diambil" && (
-            <Button onClick={() => setIsDelegateOpen(true)} className="gap-2 font-bold">
+            <Button onClick={() => setIsDelegateOpen(true)} className="gap-2 font-bold cursor-pointer">
               <UserCheck className="w-4 h-4" />
               {letter.delegateInfo ? "Ubah Delegasi" : "Utus Delegasi"}
             </Button>

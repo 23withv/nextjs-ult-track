@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Info } from "lucide-react";
 
 export function CreateLetterForm() {
   const { mutate } = useSWRConfig();
@@ -55,7 +56,7 @@ export function CreateLetterForm() {
   return (
     <Dialog open={open} onOpenChange={(newOpen) => { if (!newOpen) form.reset(); setOpen(newOpen); }}>
       <DialogTrigger asChild>
-        <Button className="font-bold">+ Ajukan Surat Baru</Button>
+        <Button className="font-bold cursor-pointer">+ Ajukan Surat Baru</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -112,7 +113,14 @@ export function CreateLetterForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full h-11 font-bold mt-4" disabled={isLoading}>
+          <div className="flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900 rounded-md">
+            <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <p className="text-xs text-blue-800 dark:text-blue-300">
+              <span className="font-bold">Informasi:</span> Pengajuan surat memerlukan waktu proses sekitar 2-3 hari kerja. Mohon periksa status pengajuan Anda secara berkala.
+            </p>
+          </div>
+
+          <Button type="submit" className="w-full h-11 font-bold mt-4 cursor-pointer" disabled={isLoading}>
             {isLoading ? "Memproses..." : "Ajukan Surat"}
           </Button>
         </form>

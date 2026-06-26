@@ -55,7 +55,7 @@ const getStatusBadgeVariant = (status: string) => {
 export function AdminLetterList() {
   const [page, setPage] = useState<number>(1);
   const [selectedStatus, setSelectedStatus] =
-    useState<FilterStatus>("Diajukan");
+    useState<FilterStatus>("All");
 
   const [selectedLetter, setSelectedLetter] =
     useState<AdminLetterListItem | null>(null);
@@ -196,7 +196,7 @@ export function AdminLetterList() {
             onChange={(e) => setResi(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && setAppliedResi(resi)}
           />
-          <Button onClick={() => setAppliedResi(resi)}>Cari</Button>
+          <Button onClick={() => setAppliedResi(resi)} className="cursor-pointer">Cari</Button>
           {appliedResi && (
             <Button
               variant="outline"

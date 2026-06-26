@@ -71,7 +71,7 @@ export function ReferenceList({ type, label }: Props) {
         <h3 className="font-bold text-lg">{label}</h3>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button size="sm"><Plus className="w-4 h-4 mr-2" /> Tambah {label}</Button>
+            <Button className="cursor-pointer" size="sm"><Plus className="w-4 h-4 mr-2" /> Tambah {label}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader><DialogTitle>Tambah {label}</DialogTitle></DialogHeader>
@@ -82,7 +82,7 @@ export function ReferenceList({ type, label }: Props) {
                 placeholder={`Contoh: ${label === "Unit Tujuan" ? "Akademik" : "Surat Izin"}`}
                 disabled={isSubmitting}
               />
-              <Button onClick={handleAdd} className="w-full" disabled={isSubmitting}>
+              <Button onClick={handleAdd} className="w-full cursor-pointer" disabled={isSubmitting}>
                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Simpan Data"}
               </Button>
             </div>
@@ -112,7 +112,7 @@ export function ReferenceList({ type, label }: Props) {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Batal</AlertDialogCancel>
-                            <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => handleDelete(item._id, item.name)}>Ya, Hapus</AlertDialogAction>
+                            <AlertDialogAction className="bg-destructive hover:bg-destructive/90 cursor-pointer" onClick={() => handleDelete(item._id, item.name)}>Ya, Hapus</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

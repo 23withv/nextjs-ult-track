@@ -1,10 +1,20 @@
-export default function DashboardPage() {
+import { Metadata } from "next";
+import { AdminDashboardClient } from "./admin-dashboard";
+
+export const metadata: Metadata = {
+  title: "Dasbor Utama | Admin ULT-Track",
+};
+
+export default function AdminDashboardPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        Welcome to the admin dashboard. Here you can manage your application.
-      </p>
+    <div className="container mx-auto p-4 md:p-6 space-y-8">
+      <div>
+        <h1 className="text-3xl font-black tracking-tight text-primary">Dasbor Utama</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Pantau statistik layanan terpadu dan pengajuan surat mahasiswa.
+        </p>
+      </div>
+      <AdminDashboardClient />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight, LayoutDashboard, Users, FileText, Menu, X, LogOut, User } from "lucide-react"
+import { ChevronLeft, ChevronRight, LayoutDashboard, Users, FileText, Menu, X, LogOut, User, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { signOut } from "next-auth/react"
@@ -29,7 +29,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/admin/dashboard", label: "Dasbor", icon: LayoutDashboard },
     { href: "/admin/mahasiswa", label: "Kelola Mahasiswa", icon: Users },
     { href: "/admin/surat", label: "Kelola Surat", icon: FileText },
-    { href: "/admin/pengaturan", label: "Pengaturan", icon: Menu },
+    { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings },
   ]
 
   const mahasiswaLinks = [
