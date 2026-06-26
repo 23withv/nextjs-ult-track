@@ -79,6 +79,7 @@ export function RegisterForm() {
   const onSubmit = async (values: RegisterMahasiswaInput) => {
     try {
       setIsLoading(true);
+      // Eksekusi fungsi mutasi API Client untuk mengirimkan payload registrasi mahasiswa baru
       const result = await postRegisterMahasiswa(values);
       toast.success(result.message);
 

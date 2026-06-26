@@ -10,6 +10,7 @@ export const getAdminLetters = async (page: number, status: string, resi: string
     
     if (status && status !== "All") params.append("status", status);
     if (resi) params.append("resi", resi);
+    // Eksekusi HTTP GET ke internal API dengan parameter filter surat admin
     const response = await axios.get(`/api/admin/letters?${params.toString()}`);
     
     return response.data.data as AdminLetterListResponse;
@@ -21,6 +22,7 @@ export const getAdminLetters = async (page: number, status: string, resi: string
 
 export const getAdminLetterStats = async () => {
   try {
+    // Eksekusi HTTP GET untuk mengambil agregasi statistik surat admin
     const response = await axios.get("/api/admin/letters/stats");
     return response.data.data;
   } catch (error: unknown) {

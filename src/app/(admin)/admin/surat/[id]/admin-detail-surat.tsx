@@ -37,6 +37,7 @@ const getStatusIcon = (status: string) => {
 };
 
 export function DetailAdminSuratClient({ letterId }: { letterId: string }) {
+  // Panggil SWR hooks untuk mengeksekusi pengambilan detail persuratan sisi admin
   const { data, error, isLoading } = useSWR(
     `/api/admin/letters/${letterId}`,
     (url) => axios.get(url).then((res) => res.data.data)

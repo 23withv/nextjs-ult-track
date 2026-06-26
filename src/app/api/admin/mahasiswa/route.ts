@@ -6,6 +6,7 @@ export async function POST(req: NextRequest) {
   return RouteHandler(async () => {
     const payload = await req.json();
 
+    // Ekstrak payload JSON dan delegasikan registrasi mahasiswa ke service
     const response = await registerMahasiswaServer(payload);
 
     return NextResponse.json(
@@ -25,6 +26,7 @@ export async function GET(req: NextRequest) {
     const jurusan = searchParams.get("jurusan") || undefined;
     const prodi = searchParams.get("prodi") || undefined;
 
+    // Ekstrak parameter filter dan delegasikan pencarian mahasiswa ke service
     const response = await getMahasiswaListServer(page, 10, jurusan, prodi);
     
     return NextResponse.json(

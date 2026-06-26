@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     if (!session?.user?.id) throw new Error("Unauthorized access");
 
     const body = await req.json();
+    // Ekstrak payload pengajuan surat dan delegasikan proses ke service
     const response = await createLetterServer(session.user.id, body);
 
     return NextResponse.json(
@@ -24,6 +25,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) throw new Error("Unauthorized access");
 
+    // Ekstrak sesi pengguna dan delegasikan pengambilan riwayat ke service
     const response = await getMahasiswaLetterListServer(session.user.id);
 
     return NextResponse.json(

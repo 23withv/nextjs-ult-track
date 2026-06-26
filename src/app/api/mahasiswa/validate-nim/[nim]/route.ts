@@ -16,6 +16,7 @@ export async function GET(_req: NextRequest, { params }: { params: Params }) {
 
     await connectDB();
 
+    // Jalankan query MongoDB untuk memvalidasi keberadaan NIM
     const mahasiswa = await MahasiswaModel.findOne({ nim }).select("name prodi").lean();
     
     if (!mahasiswa) {

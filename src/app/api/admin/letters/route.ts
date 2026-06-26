@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get("status") || undefined;
     const resi = searchParams.get("resi") || undefined;
 
+    // Ekstrak query params pencarian dan delegasikan pengambilan daftar surat ke service
     const response = await getAdminLetterListServer(page, limit, status, resi);
 
     if ('data' in response) {

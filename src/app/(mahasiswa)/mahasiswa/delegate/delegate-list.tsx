@@ -25,6 +25,7 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destr
 export function DelegateListClient() {
   const [selectedStatus, setSelectedStatus] = useState<string>("All");
 
+  // Panggil SWR hooks untuk mengambil daftar surat terdelegasi dari client-service
   const { data, error, isLoading } = useSWR(
     "/api/mahasiswa/delegates",
     getDelegatedLetters,

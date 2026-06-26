@@ -10,6 +10,7 @@ export const loginUser = async (payload: LoginInput) => {
   return await APIHandler(async () => {
     const validatedData = validate(loginSchema, payload);
 
+    // Panggil NextAuth untuk proses otentikasi kredensial
     const res = await signIn("credentials", {
       id: validatedData.id,
       password: validatedData.password,

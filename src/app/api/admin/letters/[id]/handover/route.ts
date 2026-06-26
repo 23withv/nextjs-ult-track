@@ -23,6 +23,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
       throw new SetError("Data penerima wajib diisi lengkap", 400);
     }
 
+    // Ekstrak payload serah terima dan delegasikan proses ke service
     const res = await processHandoverServer(session.user.id, {
       letterId: id,
       takenByOption,

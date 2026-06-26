@@ -26,6 +26,7 @@ const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destr
 export function MahasiswaLetterList() {
   const [selectedStatus, setSelectedStatus] = useState<string>("All");
   
+  // Panggil SWR hooks untuk mengeksekusi pengambilan riwayat surat dari client-service
   const { data, error, isLoading } = useSWR(
     "/api/mahasiswa/letters", 
     getMahasiswaLetters,

@@ -7,6 +7,7 @@ type Params = Promise<{ type: "unit" | "letterType" }>;
 export async function GET(_req: NextRequest, { params }: { params: Params }) {
   const { type } = await params;
   return RouteHandler(async () => {
+    // Ekstrak parameter tipe referensi dan delegasikan pengambilan data ke service
     const res = await getReferenceListServer(type);
     return NextResponse.json(res, { status: res.status });
   });
@@ -16,6 +17,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
   const { type } = await params;
   return RouteHandler(async () => {
     const { name } = await req.json();
+    // Ekstrak payload referensi baru dan delegasikan pembuatan data ke service
     const res = await createReferenceServer(type, name);
     return NextResponse.json(res, { status: res.status });
   });
@@ -25,6 +27,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
   const { type } = await params;
   return RouteHandler(async () => {
     const { id } = await req.json();
+    // Ekstrak ID referensi dan delegasikan penghapusan logis ke service
     const res = await softDeleteReferenceServer(type, id);
     return NextResponse.json(res, { status: res.status });
   });

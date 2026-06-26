@@ -4,6 +4,7 @@ import { DelegatedLetterItem, LetterListItem } from "@/types/response/mahasiswa/
 
 export const postCreateLetter = async (data: CreateLetterInput) => {
   try {
+    // Eksekusi HTTP POST payload pengajuan surat ke internal API
     const response = await axios.post("/api/mahasiswa/letters", data);
     return { message: String(response.data.message) };
   } catch (error: unknown) {
@@ -16,6 +17,7 @@ export const postCreateLetter = async (data: CreateLetterInput) => {
 
 export const getMahasiswaLetters = async () => {
   try {
+    // Eksekusi HTTP GET untuk mengambil seluruh riwayat surat mahasiswa
     const response = await axios.get("/api/mahasiswa/letters");
     return (response.data.data as LetterListItem[]) || [];
   } catch (error: unknown) {
@@ -28,6 +30,7 @@ export const getMahasiswaLetters = async () => {
 
 export const validateDelegateNim = async (nim: string) => {
   try {
+    // Eksekusi HTTP GET validasi ketersediaan NIM mahasiswa
     const response = await axios.get(`/api/mahasiswa/validate-nim/${nim}`);
     return response.data as { name: string; prodi: string };
   } catch {
@@ -37,6 +40,7 @@ export const validateDelegateNim = async (nim: string) => {
 
 export const getMahasiswaLetterDetail = async (id: string) => {
   try {
+    // Eksekusi HTTP GET untuk mengambil rincian data surat spesifik
     const response = await axios.get(`/api/mahasiswa/letters/${id}`);
     return response.data.data;
   } catch (error: unknown) {
@@ -49,6 +53,7 @@ export const getMahasiswaLetterDetail = async (id: string) => {
 
 export const patchAssignDelegate = async (letterId: string, delegateNim: string) => {
   try {
+    // Eksekusi HTTP PATCH payload delegasi pengurusan surat
     const response = await axios.patch(`/api/mahasiswa/letters/${letterId}/delegate`, { nim: delegateNim });
     return { message: String(response.data.message) };
   } catch (error: unknown) {
@@ -59,6 +64,7 @@ export const patchAssignDelegate = async (letterId: string, delegateNim: string)
 
 export const getDelegatedLetters = async () => {
   try {
+    // Eksekusi HTTP GET untuk mengambil daftar surat terdelegasi
     const response = await axios.get("/api/mahasiswa/delegates");
     return (response.data.data as DelegatedLetterItem[]) || [];
   } catch (error: unknown) {

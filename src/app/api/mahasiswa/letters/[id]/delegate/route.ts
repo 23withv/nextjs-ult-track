@@ -16,6 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
     const body = await req.json();
     if (!body.nim) throw new SetError("NIM delegasi wajib diisi", 400);
 
+    // Ekstrak payload penunjukan dan delegasikan ke service delegasi
     const response = await assignDelegateServer(session.user.id, id, body.nim);
 
     return NextResponse.json({ message: response.message }, { status: response.status });

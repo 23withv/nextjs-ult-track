@@ -10,6 +10,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
   return RouteHandler(async () => {
     const body = await req.json();
 
+    // Ekstrak payload perubahan status dan delegasikan ke service
     const res = await updateLetterStatusServer(id, {
       status: body.status,
       adminNotes: body.adminNotes,
@@ -24,6 +25,7 @@ export async function GET(_req: NextRequest, { params }: { params: Params }) {
   const { id } = await params;
 
   return RouteHandler(async () => {
+    // Ekstrak parameter ID dan delegasikan pengambilan rincian surat ke service
     const res = await getAdminLetterDetailServer(id);
 
     if ('data' in res) {

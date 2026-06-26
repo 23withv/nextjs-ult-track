@@ -56,6 +56,7 @@ export function DetailSuratClient({ letterId }: Props) {
   } | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isAssigning, setIsAssigning] = useState(false);
+  // Panggil SWR hooks untuk mengeksekusi pengambilan detail surat spesifik dari client-service
   const { data, error, isLoading } = useSWR(
     `/api/mahasiswa/letters/${letterId}`,
     () => getMahasiswaLetterDetail(letterId),
@@ -65,6 +66,7 @@ export function DetailSuratClient({ letterId }: Props) {
     if (!searchNim.trim()) return;
     setIsSearching(true);
     setFoundDelegate(null);
+    // Eksekusi fungsi API Client untuk memvalidasi NIM delegasi
     const result = await validateDelegateNim(searchNim);
     if (result) {
       setFoundDelegate(result);
@@ -78,6 +80,7 @@ export function DetailSuratClient({ letterId }: Props) {
     if (!searchNim || !foundDelegate) return;
     setIsAssigning(true);
     try {
+      // Eksekusi fungsi mutasi API Client untuk menyimpan penunjukan delegasi
       const res = await patchAssignDelegate(letterId, searchNim);
       toast.success(res.message);
       setIsDelegateOpen(false);

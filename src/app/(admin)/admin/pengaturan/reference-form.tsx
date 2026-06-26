@@ -30,6 +30,7 @@ export function ReferenceList({ type, label }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetcher = (url: string) => axios.get<ReferenceResponse>(url).then((res) => res.data.data);
+  // Panggil SWR hooks untuk mengambil daftar referensi sistem dari client-service
   const { data, isLoading } = useSWR(`/api/admin/references/${type}`, fetcher);
 
   const handleAdd = async () => {

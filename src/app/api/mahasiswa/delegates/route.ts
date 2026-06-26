@@ -9,6 +9,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) throw new SetError("Unauthorized access", 401);
 
+    // Ekstrak sesi mahasiswa dan delegasikan pengambilan daftar delegasi ke service
     const response = await getDelegatedLettersServer(session.user.id);
 
     return NextResponse.json(

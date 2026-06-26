@@ -61,6 +61,7 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
     if (file) formData.append("file", file);
 
     try {
+      // Eksekusi fungsi mutasi API Client untuk mengirimkan payload serah terima dokumen
       await axios.post(`/api/admin/letters/${letter._id}/handover`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });

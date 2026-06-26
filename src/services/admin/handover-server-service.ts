@@ -17,6 +17,7 @@ export const processHandoverServer = async (
   return await APIHandler(async () => {
     await connectDB();
 
+    // Jalankan query MongoDB untuk validasi eksistensi dokumen
     const letter = await LetterModel.findById(payload.letterId);
     if (!letter) throw new SetError("Dokumen tidak ditemukan", 404);
     if (letter.status !== "Siap Diambil") {
@@ -30,6 +31,7 @@ export const processHandoverServer = async (
     }
 
     try {
+      // Jalankan query insert ke MongoDB untuk log serah terima
       await HandoverLogModel.create({
         letterId: payload.letterId,
         takenByOption: payload.takenByOption,
