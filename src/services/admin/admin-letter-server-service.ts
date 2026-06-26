@@ -23,6 +23,7 @@ export const getAdminLetterListServer = async (
 
     const skip = (page - 1) * limit;
 
+    // Jalankan query pencarian ke koleksi MongoDB dan kembalikan hasil terformat
     const [data, totalDocuments] = await Promise.all([
       LetterModel.find(query)
         .select("_id letterNumber mahasiswaInfo delegateInfo targetUnit customTargetUnitDetail type customTypeDetail mahasiswaNote status createdAt")
@@ -68,6 +69,7 @@ export const updateLetterStatusServer = async (
       throw new SetError("Alasan penolakan wajib diisi untuk status Ditolak", 400);
     }
 
+    // Jalankan query update status ke MongoDB
     const updatedLetter = await LetterModel.findByIdAndUpdate(
       letterId,
       {
@@ -90,6 +92,7 @@ export const getAdminLetterStatsServer = async () => {
   return await APIHandler(async () => {
     await connectDB();
 
+    // Jalankan query agregasi MongoDB untuk kalkulasi statistik surat
     const stats = await LetterModel.aggregate([
       {
         $group: {
@@ -125,6 +128,7 @@ export const getAdminLetterDetailServer = async (letterId: string) => {
   return await APIHandler(async () => {
     await connectDB();
 
+    // Jalankan query pencarian ke MongoDB untuk memuat detail surat
     const letter = await LetterModel.findById(letterId).lean();
     if (!letter) throw new SetError("Surat tidak ditemukan", 404);
 

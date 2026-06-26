@@ -65,6 +65,7 @@ export function AdminLetterList() {
   const [resi, setResi] = useState("");
   const [appliedResi, setAppliedResi] = useState("");
 
+  // Panggil SWR hooks untuk mengambil daftar surat admin dengan parameter filter
   const {
     data: responseData,
     error: listError,
@@ -80,6 +81,7 @@ export function AdminLetterList() {
     },
   );
 
+  // Panggil SWR hooks untuk mengambil agregasi statistik persuratan admin
   const { data: stats, isLoading: statsLoading } = useSWR(
     "/api/admin/letters/stats",
     getAdminLetterStats,

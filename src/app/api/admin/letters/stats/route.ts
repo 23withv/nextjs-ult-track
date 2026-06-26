@@ -9,6 +9,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) throw new SetError("Unauthorized access", 401);
 
+    // Ekstrak sesi admin dan delegasikan pengambilan statistik persuratan ke service
     const response = await getAdminLetterStatsServer();
 
     return NextResponse.json(

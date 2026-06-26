@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
     const monthParam = searchParams.get("month");
     const month = monthParam && monthParam !== "all" ? parseInt(monthParam, 10) : undefined;
 
+    // Ekstrak parameter kalender dan delegasikan pemrosesan statistik dasbor ke service
     const response = await getAdminDashboardStatsServer(year, month);
 
     return NextResponse.json(

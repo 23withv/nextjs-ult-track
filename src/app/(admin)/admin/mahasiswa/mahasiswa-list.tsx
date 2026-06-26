@@ -26,12 +26,14 @@ export function MahasiswaList() {
   const [appliedJurusan, setAppliedJurusan] = useState("");
   const [appliedProdi, setAppliedProdi] = useState("");
 
+  // Panggil SWR hooks untuk mengambil agregasi statistik mahasiswa dari client-service
   const { data: stats, isLoading: isStatsLoading } = useSWR(
     ["/api/admin/mahasiswa/stats", appliedJurusan, appliedProdi],
     ([, jur, prod]) => getMahasiswaStats(jur as string, prod as string),
     { refreshInterval: 10000 }
   );
 
+  // Panggil SWR hooks untuk mengambil daftar pencarian mahasiswa dari client-service
   const {
     data: responseData,
     error,

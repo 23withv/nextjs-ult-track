@@ -14,9 +14,7 @@ import {
   CheckCircle2, 
   XCircle, 
   Info, 
-  Calendar, 
-  Filter,
-  LucideIcon
+  LucideIcon 
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +23,6 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell
 } from "recharts";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { IAdminDashboardRes, ILatestLetter, IPieChartData } from "@/types/response/admin/admin-dash";
 
@@ -57,6 +54,7 @@ export function AdminDashboardClient() {
 
   const apiUrl = `/api/admin/dashboard?year=${currentYear}&month=${currentMonth}`;
 
+  // Panggil SWR hooks untuk mengeksekusi pengambilan data analitik dashboard dari client-service
   const { data, isLoading } = useSWR<IAdminDashboardRes>(
     apiUrl,
     (url) => axios.get(url).then(res => res.data.data),
@@ -74,7 +72,7 @@ export function AdminDashboardClient() {
   };
 
   if (isLoading && !data) return <DashboardSkeleton />;
-  if (!data && !isLoading) return <div className="text-center p-10 font-bold text-destructive">Gagal memuat dasbor.</div>;
+  if (!data && !isLoading) return <div className="flex justify-center items-center p-8 border border-destructive/20 bg-destructive/10 rounded-lg"><span className="text-sm font-medium text-destructive">Gagal memuat dasbor.</span></div>;
 
   const { stats, lineChart, pieChart, latestLetters, availableYears, isMonthView } = data!;
 
@@ -88,57 +86,53 @@ export function AdminDashboardClient() {
 
   return (
     <div className={cn("space-y-6 transition-opacity duration-200", isPending && "opacity-60")}>
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-card p-4 rounded-xl border border-border/50 shadow-sm mb-6">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
-          <span className="text-sm font-bold">Periode Laporan:</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-muted/30 p-3 rounded-lg border border-border/50 items-end">
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-muted-foreground">Tahun Laporan</label>
+          <select
+            className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            value={currentYear}
+            onChange={(e) => handleUpdateFilter("year", e.target.value)}
+          >
+            {availableYears?.map((y: number) => (
+              <option key={y} value={String(y)}>Tahun {y}</option>
+            ))}
+          </select>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <Select value={currentYear} onValueChange={(v) => handleUpdateFilter("year", v)}>
-            <SelectTrigger className="w-full sm:w-32 h-10 font-bold bg-background">
-              <SelectValue placeholder="Tahun" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableYears?.map((y: number) => (
-                <SelectItem key={y} value={String(y)} className="font-bold">Tahun {y}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
 
-          <Select value={currentMonth} onValueChange={(v) => handleUpdateFilter("month", v)}>
-            <SelectTrigger className="w-full sm:w-48 h-10 font-bold bg-background">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground" />
-                <SelectValue placeholder="Pilih Bulan" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {monthsList.map((m) => (
-                <SelectItem key={m.v} value={m.v} className="font-bold">{m.l}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-muted-foreground">Bulan</label>
+          <select
+            className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+            value={currentMonth}
+            onChange={(e) => handleUpdateFilter("month", e.target.value)}
+          >
+            {monthsList.map((m) => (
+              <option key={m.v} value={m.v}>{m.l}</option>
+            ))}
+          </select>
         </div>
+        <div className="hidden md:block"></div> 
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Total Pengajuan" value={stats.totalLetter} icon={FileText} color="text-blue-600" bg="bg-blue-50 dark:bg-blue-900/20" />
-        <StatCard title="Total Mahasiswa" value={stats.totalMahasiswa} icon={Users} color="text-emerald-600" bg="bg-emerald-50 dark:bg-emerald-900/20" />
-        <StatCard title="Unit Tersedia" value={stats.totalUnit} icon={Building2} color="text-amber-600" bg="bg-amber-50 dark:bg-amber-900/20" />
-        <StatCard title="Jenis Surat" value={stats.totalLetterType} icon={Layers} color="text-purple-600" bg="bg-purple-50 dark:bg-purple-900/20" />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <StatCard title="Total Pengajuan" value={stats.totalLetter} icon={FileText} colorClass="text-blue-600" bgClass="bg-blue-500/10" />
+        <StatCard title="Total Mahasiswa" value={stats.totalMahasiswa} icon={Users} colorClass="text-emerald-600" bgClass="bg-emerald-500/10" />
+        <StatCard title="Unit Tersedia" value={stats.totalUnit} icon={Building2} colorClass="text-amber-600" bgClass="bg-amber-500/10" />
+        <StatCard title="Jenis Surat" value={stats.totalLetterType} icon={Layers} colorClass="text-purple-600" bgClass="bg-purple-500/10" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 shadow-sm border-border/50">
-          <CardHeader>
-            <CardTitle className="text-base uppercase tracking-tight flex items-center justify-between">
+        <Card className="lg:col-span-2 shadow-sm border-border/50 bg-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base tracking-tight flex items-center justify-between">
               <span>Tren Pengajuan Surat</span>
               <span className="text-xs font-bold text-muted-foreground bg-muted px-2 py-1 rounded-md">
                 {isMonthView ? `Harian (${monthsList.find(m => m.v === currentMonth)?.l})` : "Bulanan (1 Tahun)"}
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="h-87.5">
+          <CardContent className="h-75">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lineChart} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
@@ -158,17 +152,17 @@ export function AdminDashboardClient() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border/50">
-          <CardHeader>
-            <CardTitle className="text-base uppercase tracking-tight">Sebaran Unit Tujuan</CardTitle>
+        <Card className="shadow-sm border-border/50 bg-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base tracking-tight">Sebaran Unit Tujuan</CardTitle>
           </CardHeader>
-          <CardContent className="h-87.5 flex items-center justify-center">
+          <CardContent className="h-75 flex items-center justify-center">
             {pieChart.length === 0 ? (
-               <p className="text-sm text-muted-foreground italic">Belum ada data pada periode ini.</p>
+              <p className="text-sm text-muted-foreground italic">Belum ada data pada periode ini.</p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={pieChart} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={5} dataKey="value" stroke="none">
+                  <Pie data={pieChart} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
                     {pieChart.map((entry: IPieChartData, index: number) => (
                       <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                     ))}
@@ -183,53 +177,71 @@ export function AdminDashboardClient() {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-          <div className="w-2 h-4 bg-primary rounded-full"></div>
+        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">
           Pengajuan Terbaru (Periode Ini)
         </h3>
         
         {latestLetters.length === 0 ? (
-          <div className="p-10 border border-dashed rounded-xl text-center text-muted-foreground text-sm bg-muted/20">
-            Belum ada pengajuan surat pada periode yang dipilih.
+          <div className="flex justify-center items-center p-8 border border-dashed border-border rounded-lg">
+            <span className="text-sm font-medium text-muted-foreground">Belum ada pengajuan surat pada periode yang dipilih.</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3">
-            {latestLetters.map((l: ILatestLetter) => (
-              <div key={l._id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-card border border-border/50 rounded-xl hover:shadow-md transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                    <FileText size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm">{l.mahasiswaName} <span className="text-muted-foreground font-mono font-normal">({l.mahasiswaNim})</span></h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">{l.type} • {l.targetUnit}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-xs font-medium bg-muted/50 px-3 py-2 rounded-lg">
-                  <span className="flex items-center gap-1.5"><MapPin size={12}/> {l.letterNumber}</span>
-                  <Badge variant="outline" className="bg-background flex items-center gap-1.5 px-2 py-0.5">
-                    {getStatusIcon(l.status)} {l.status}
-                  </Badge>
-                </div>
+          <Card className="border-border/50 shadow-sm overflow-hidden">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-muted text-muted-foreground uppercase text-xs font-bold border-b border-border/50">
+                    <tr>
+                      <th className="px-6 py-4">Pemohon</th>
+                      <th className="px-6 py-4">Nomor Resi</th>
+                      <th className="px-6 py-4">Tujuan & Jenis Surat</th>
+                      <th className="px-6 py-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {latestLetters.map((l: ILatestLetter) => (
+                      <tr key={l._id} className="hover:bg-muted/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-bold">{l.mahasiswaName}</span>
+                            <span className="text-xs text-muted-foreground">{l.mahasiswaNim}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-medium flex items-center gap-1.5 mt-1"><MapPin size={14} className="text-muted-foreground"/> {l.letterNumber}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-bold">{l.targetUnit}</span>
+                            <span className="text-xs text-muted-foreground">{l.type}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant="outline" className="bg-background">
+                            <span className="flex items-center gap-1.5">{getStatusIcon(l.status)} {l.status}</span>
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ))}
-          </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
   );
 }
 
-function StatCard({ title, value, icon: Icon, color, bg }: { title: string, value: number, icon: LucideIcon, color: string, bg: string }) {
+function StatCard({ title, value, icon: Icon, colorClass, bgClass }: { title: string, value: number, icon: LucideIcon, colorClass: string, bgClass: string }) {
   return (
-    <Card className="shadow-sm border-border/50 hover:scale-[1.02] transition-transform">
-      <CardContent className="p-6 flex items-center gap-4">
-        <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", bg, color)}>
-          <Icon size={24} />
+    <Card className="shadow-sm border-border/50 bg-card">
+      <CardContent className="p-4 flex items-center gap-4">
+        <div className={cn("p-3 rounded-lg", bgClass, colorClass)}>
+          <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{title}</p>
-          <h3 className="text-2xl font-black mt-1">{value.toLocaleString("id-ID")}</h3>
+          <p className="text-xs text-muted-foreground font-medium">{title}</p>
+          <h4 className="text-xl font-black">{value.toLocaleString("id-ID")}</h4>
         </div>
       </CardContent>
     </Card>
@@ -238,16 +250,15 @@ function StatCard({ title, value, icon: Icon, color, bg }: { title: string, valu
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 w-full" />)}
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Skeleton className="lg:col-span-2 h-100 w-full rounded-xl" />
-        <Skeleton className="h-100 w-full rounded-xl" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Skeleton className="md:col-span-2 h-87.5 w-full" />
+        <Skeleton className="h-87.5 w-full" />
       </div>
-      <Skeleton className="h-16 w-full rounded-xl" />
-      <Skeleton className="h-16 w-full rounded-xl" />
+      <Skeleton className="h-75 w-full" />
     </div>
   );
 }

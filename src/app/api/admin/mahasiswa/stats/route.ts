@@ -4,6 +4,7 @@ import { getMahasiswaStatsServer } from "@/services/admin/mahasiswa-service";
 
 export async function GET() {
   return RouteHandler(async () => {
+    // Ekstrak parameter dan delegasikan kalkulasi statistik mahasiswa ke service
     const response = await getMahasiswaStatsServer();
     
     return NextResponse.json(

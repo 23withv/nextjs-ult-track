@@ -39,6 +39,7 @@ export const getAdminDashboardStatsServer = async (year: number, month?: number)
 
     const dateQuery = { createdAt: { $gte: startDate, $lte: endDate } };
     
+    // Jalankan query MongoDB untuk agregasi hitungan dokumen dashboard
     const [totalUnit, totalLetterType, totalLetter, totalMahasiswa] = await Promise.all([
       UnitModel.countDocuments({ isDeleted: false }),
       LetterTypeModel.countDocuments({ isDeleted: false }),

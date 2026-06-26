@@ -9,6 +9,7 @@ export const createLetterServer = async (userId: string, payload: CreateLetterIn
   return await APIHandler(async () => {
     await connectDB();
 
+    // Jalankan query MongoDB untuk validasi profil pemohon surat
     const currentUser = await MahasiswaModel.findById(userId).select("_id nim name prodi").lean();
     if (!currentUser) throw new Error("Akses ditolak: Data pengguna tidak ditemukan");
 
@@ -20,6 +21,7 @@ export const createLetterServer = async (userId: string, payload: CreateLetterIn
 
     const trackingNumber = `${prodiCode}-${dateStr}-${randomHex}`;
 
+    // Jalankan eksekusi query penyimpanan dokumen surat baru ke MongoDB
     await LetterModel.create({
       mahasiswaInfo: {
         _id: currentUser._id,
@@ -49,6 +51,7 @@ export const getMahasiswaLetterListServer = async (userId: string) => {
     
     const userNim = user.nim;
 
+    // Jalankan query pencarian riwayat surat berdasarkan NIM pemohon
     const letters = await LetterModel.find({ "mahasiswaInfo.nim": userNim })
     .select("_id targetUnit customTargetUnitDetail type customTypeDetail mahasiswaNote status createdAt")
     .sort({ createdAt: -1 })
@@ -73,6 +76,7 @@ export const getMahasiswaLetterDetailServer = async (userId: string, letterId: s
     const user = await MahasiswaModel.findById(userId).select("nim").lean();
     if (!user) throw new Error("Akses ditolak: Data pengguna tidak ditemukan");
 
+    // Jalankan query MongoDB untuk verifikasi akses surat (pemohon/delegasi)
     const letter = await LetterModel.findOne({
       _id: letterId,
       $or: [
@@ -128,9 +132,11 @@ export const assignDelegateServer = async (userId: string, letterId: string, del
     if (!letter) throw new SetError("Dokumen tidak ditemukan", 404);
     if (letter.status !== "Siap Diambil") throw new SetError("Dokumen belum siap diambil", 400);
 
+    // Jalankan query MongoDB untuk memvalidasi data mahasiswa penerima delegasi
     const delegate = await MahasiswaModel.findOne({ nim: delegateNim }).select("_id nim name").lean();
     if (!delegate) throw new SetError("Mahasiswa delegasi tidak ditemukan", 404);
 
+    // Jalankan query update penambahan delegasi pada dokumen surat
     await LetterModel.findByIdAndUpdate(letterId, {
       delegateInfo: {
         _id: delegate._id,
@@ -150,6 +156,7 @@ export const getDelegatedLettersServer = async (userId: string) => {
     const user = await MahasiswaModel.findById(userId).select("nim").lean();
     if (!user) throw new Error("Akses ditolak: Data pengguna tidak ditemukan");
 
+    // Jalankan query MongoDB untuk mengambil daftar surat yang didelegasikan
     const letters = await LetterModel.find({ "delegateInfo.nim": user.nim })
     .select("_id letterNumber mahasiswaInfo targetUnit customTargetUnitDetail type customTypeDetail status createdAt")
     .sort({ createdAt: -1 })

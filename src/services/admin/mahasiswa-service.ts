@@ -19,6 +19,7 @@ export const registerMahasiswaServer = async (
     await connectDB();
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
 
+    // Jalankan eksekusi query pembuatan dokumen mahasiswa baru ke MongoDB
     await MahasiswaModel.create({
       nim: validatedData.nim,
       name: validatedData.name,
@@ -47,6 +48,7 @@ export const getMahasiswaListServer = async (
 
     const skip = (page - 1) * limit;
 
+    // Jalankan query pencarian dan paginasi data mahasiswa dari MongoDB
     const [data, totalDocuments] = await Promise.all([
       MahasiswaModel.find(query)
         .select("_id nim name email jurusan prodi isActive")
@@ -86,6 +88,7 @@ export const getMahasiswaStatsServer = async (jurusan?: string, prodi?: string) 
     if (jurusan) query.jurusan = { $regex: jurusan, $options: "i" };
     if (prodi) query.prodi = { $regex: prodi, $options: "i" };
 
+    // Jalankan query count dokumen mahasiswa di MongoDB
     const total = await MahasiswaModel.countDocuments(query);
     const active = await MahasiswaModel.countDocuments({ ...query, isActive: true });
     const inactive = total - active;

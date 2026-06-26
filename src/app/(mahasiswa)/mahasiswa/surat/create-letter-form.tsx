@@ -23,7 +23,9 @@ export function CreateLetterForm() {
 
   const fetcher = (url: string) => axios.get(url).then((res) => res.data.data);
 
+  // Panggil SWR hooks untuk mengambil referensi unit tujuan surat dari client-service
   const { data: units } = useSWR<ReferenceItem[]>("/api/admin/references/unit", fetcher);
+  // Panggil SWR hooks untuk mengambil referensi jenis surat dari client-service
   const { data: letterTypes } = useSWR<ReferenceItem[]>("/api/admin/references/letterType", fetcher);
 
   const form = useForm<CreateLetterInput>({
@@ -40,6 +42,7 @@ export function CreateLetterForm() {
   const onSubmit = async (values: CreateLetterInput) => {
     try {
       setIsLoading(true);
+      // Eksekusi fungsi mutasi API Client untuk mengirimkan payload pengajuan surat
       const result = await postCreateLetter(values);
       toast.success(result.message);
       form.reset();

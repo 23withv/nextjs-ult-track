@@ -10,6 +10,7 @@ export interface PaginationMeta {
 
 export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
   try {
+    // Eksekusi HTTP POST payload registrasi data mahasiswa baru
     const response = await axios.post("/api/admin/mahasiswa", data);
     return { message: String(response.data.message) };
   } catch (error: unknown) {
@@ -25,6 +26,7 @@ export const postRegisterMahasiswa = async (data: RegisterMahasiswaInput) => {
 
 export const getMahasiswaList = async (page: number = 1, jurusan: string = "", prodi: string = "") => {
   try {
+    // Eksekusi HTTP GET pencarian mahasiswa berdasarkan parameter halaman dan program studi
     const response = await axios.get(
       `/api/admin/mahasiswa?page=${page}&jurusan=${encodeURIComponent(jurusan)}&prodi=${encodeURIComponent(prodi)}`
     );
@@ -42,6 +44,7 @@ export const getMahasiswaList = async (page: number = 1, jurusan: string = "", p
 
 export const getMahasiswaStats = async (jurusan: string = "", prodi: string = "") => {
   try {
+    // Eksekusi HTTP GET untuk mengambil agregasi data statistik mahasiswa
     const response = await axios.get(
       `/api/admin/mahasiswa/stats?jurusan=${encodeURIComponent(jurusan)}&prodi=${encodeURIComponent(prodi)}`
     );
