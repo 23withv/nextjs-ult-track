@@ -1,10 +1,4 @@
-import { Metadata } from "next";
 import { DelegateListClient } from "./delegate-list";
-
-export const metadata: Metadata = {
-  title: "Tugas Delegasi | ULT-Track",
-  description: "Daftar dokumen di mana Anda ditunjuk sebagai delegasi untuk pengambilan fisik.",
-};
 
 export default function DelegatePage() {
   return (

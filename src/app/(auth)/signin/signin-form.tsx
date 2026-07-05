@@ -51,6 +51,7 @@ export function SignInForm() {
         setServerError(result.message);
       }
     } catch (error: unknown) {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       if (error instanceof Error) {
         setServerError(error.message);
       } else {
@@ -99,7 +100,7 @@ export function SignInForm() {
             type="button"
             tabIndex={-1}
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer focus:outline-none"
             disabled={isLoading}
           >
             {showPassword ? (

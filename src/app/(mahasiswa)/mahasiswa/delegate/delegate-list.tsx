@@ -143,6 +143,7 @@ export function DelegateListClient() {
               <table className="w-full text-sm text-left">
                 <thead className="bg-muted/50 text-muted-foreground uppercase text-xs font-bold border-b border-border/50">
                   <tr>
+                    <th className="px-6 py-4 w-16 text-center">No</th>
                     <th className="px-6 py-4">Nomor Resi</th>
                     <th className="px-6 py-4">Pemohon Asli</th>
                     <th className="px-6 py-4">Dokumen</th>
@@ -150,8 +151,9 @@ export function DelegateListClient() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50">
-                  {filteredLetters.map((item: DelegatedLetterItem) => (
+                  {filteredLetters.map((item: DelegatedLetterItem, index: number) => (
                     <tr key={item._id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-6 py-4 text-center text-muted-foreground font-medium">{index + 1}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="font-mono font-black text-lg text-primary">{item.letterNumber}</span>
                       </td>

@@ -115,7 +115,7 @@ export function AdminDashboardClient() {
         <div className="hidden md:block"></div> 
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard title="Total Pengajuan" value={stats.totalLetter} icon={FileText} colorClass="text-blue-600" bgClass="bg-blue-500/10" />
         <StatCard title="Total Mahasiswa" value={stats.totalMahasiswa} icon={Users} colorClass="text-emerald-600" bgClass="bg-emerald-500/10" />
         <StatCard title="Unit Tersedia" value={stats.totalUnit} icon={Building2} colorClass="text-amber-600" bgClass="bg-amber-500/10" />
@@ -192,6 +192,7 @@ export function AdminDashboardClient() {
                 <table className="w-full text-sm text-left">
                   <thead className="bg-muted text-muted-foreground uppercase text-xs font-bold border-b border-border/50">
                     <tr>
+                      <th className="px-6 py-4 w-16 text-center">No</th>
                       <th className="px-6 py-4">Pemohon</th>
                       <th className="px-6 py-4">Nomor Resi</th>
                       <th className="px-6 py-4">Tujuan & Jenis Surat</th>
@@ -199,8 +200,9 @@ export function AdminDashboardClient() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/50">
-                    {latestLetters.map((l: ILatestLetter) => (
+                    {latestLetters.map((l: ILatestLetter, index: number) => (
                       <tr key={l._id} className="hover:bg-muted/50 transition-colors">
+                        <td className="px-6 py-4 text-center text-muted-foreground font-medium">{index + 1}</td>
                         <td className="px-6 py-4">
                           <div className="flex flex-col">
                             <span className="font-bold">{l.mahasiswaName}</span>
@@ -251,7 +253,7 @@ function StatCard({ title, value, icon: Icon, colorClass, bgClass }: { title: st
 function DashboardSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 w-full" />)}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

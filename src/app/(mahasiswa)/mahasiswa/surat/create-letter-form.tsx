@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Info } from "lucide-react";
 
 export function CreateLetterForm() {
@@ -50,6 +51,7 @@ export function CreateLetterForm() {
       // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate("/api/mahasiswa/letters");
     } catch (error: unknown) {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       const err = error as Error;
       toast.error(err.message);
     } finally {
@@ -71,13 +73,25 @@ export function CreateLetterForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
           <div className="space-y-2">
             <Label className="text-sm font-bold">Unit Tujuan</Label>
-            <select {...form.register("targetUnit")} disabled={isLoading} className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-              <option value="">Pilih Unit Tujuan</option>
-              {units?.map((unit) => (
-                <option key={unit._id} value={unit.name}>{unit.name}</option>
-              ))}
-              <option value="Lainnya">Lainnya</option>
-            </select>
+            <Controller
+              control={form.control}
+              name="targetUnit"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                  <SelectTrigger className="w-full h-auto min-h-10 py-2 whitespace-normal [&>span]:line-clamp-none text-left">
+                    <SelectValue placeholder="Pilih Unit Tujuan" />
+                  </SelectTrigger>
+                  <SelectContent className="max-w-[calc(100vw-2rem)]">
+                    {units?.map((unit) => (
+                      <SelectItem key={unit._id} value={unit.name} className="whitespace-normal text-left">
+                        {unit.name}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="Lainnya" className="whitespace-normal text-left">Lainnya</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {form.formState.errors.targetUnit && <p className="text-xs text-destructive">{form.formState.errors.targetUnit.message}</p>}
           </div>
 
@@ -90,13 +104,25 @@ export function CreateLetterForm() {
 
           <div className="space-y-2">
             <Label className="text-sm font-bold">Jenis Surat</Label>
-            <select {...form.register("type")} disabled={isLoading} className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-              <option value="">Pilih Jenis Surat</option>
-              {letterTypes?.map((type) => (
-                <option key={type._id} value={type.name}>{type.name}</option>
-              ))}
-              <option value="Lainnya">Lainnya</option>
-            </select>
+            <Controller
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                  <SelectTrigger className="w-full h-auto min-h-10 py-2 whitespace-normal [&>span]:line-clamp-none text-left">
+                    <SelectValue placeholder="Pilih Jenis Surat" />
+                  </SelectTrigger>
+                  <SelectContent className="max-w-[calc(100vw-2rem)]">
+                    {letterTypes?.map((type) => (
+                      <SelectItem key={type._id} value={type.name} className="whitespace-normal text-left">
+                        {type.name}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="Lainnya" className="whitespace-normal text-left">Lainnya</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {form.formState.errors.type && <p className="text-xs text-destructive">{form.formState.errors.type.message}</p>}
           </div>
 

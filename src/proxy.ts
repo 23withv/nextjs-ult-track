@@ -8,6 +8,7 @@ export async function proxy(request: NextRequest) {
 
   // Redirect jika sudah login
   if (pathname.startsWith("/signin") && token) {
+    // Verifikasi sesi aktif dan otorisasi role pengguna
     return NextResponse.redirect(new URL(token.role === "admin_ult" ? "/admin/dashboard" : "/mahasiswa/dashboard", request.url));
   }
 

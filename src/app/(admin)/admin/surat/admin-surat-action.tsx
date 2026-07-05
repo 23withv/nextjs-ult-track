@@ -2,6 +2,7 @@
 
 import { AdminLetterListItem } from "@/types/response/admin/letter";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   item: AdminLetterListItem;
@@ -13,29 +14,34 @@ interface Props {
 export function AdminSuratAction({ item, onProcess, onHandover }: Props) {
   const router = useRouter();
   return (
-    <div className="flex flex-col items-center gap-2">
-      <button
+    <div className="flex flex-row items-center justify-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => router.push(`/admin/surat/${item._id}`)}
-        className="text-xs font-black text-muted-foreground hover:text-foreground hover:underline cursor-pointer"
+        className="text-xs font-bold cursor-pointer h-8 border-border/50 shadow-sm"
       >
         Detail
-      </button>
+      </Button>
+      
       {(item.status === "Diajukan" || item.status === "Diproses") && (
-        <button
+        <Button
+          size="sm"
           onClick={() => onProcess(item)}
-          className="text-xs font-black text-primary hover:underline cursor-pointer"
+          className="text-xs font-bold cursor-pointer h-8 shadow-sm"
         >
           Proses
-        </button>
+        </Button>
       )}
 
       {item.status === "Siap Diambil" && (
-        <button
+        <Button
+          size="sm"
           onClick={() => onHandover(item)}
-          className="text-xs font-black text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer"
+          className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer h-8 shadow-sm"
         >
           Serahkan
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -9,6 +9,7 @@ import { LetterListItem } from "@/types/response/mahasiswa/letter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const STATUS_FILTERS = ["All", "Diajukan", "Diproses", "Siap Diambil", "Selesai", "Ditolak"];
 
@@ -154,6 +155,7 @@ export function MahasiswaLetterList() {
               <table className="w-full text-sm text-left">
                 <thead className="bg-muted/50 text-muted-foreground uppercase text-xs font-bold border-b border-border/50">
                   <tr>
+                    <th className="px-6 py-4 w-16 text-center">No</th>
                     <th className="px-6 py-4">Tgl Pengajuan</th>
                     <th className="px-6 py-4">Unit & Jenis Surat</th>
                     <th className="px-6 py-4">Status</th>
@@ -161,8 +163,9 @@ export function MahasiswaLetterList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50">
-                  {filteredLetters.map((letter: LetterListItem) => (
+                  {filteredLetters.map((letter: LetterListItem, index: number) => (
                     <tr key={letter._id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-6 py-4 text-center text-muted-foreground font-medium">{index + 1}</td>
                       <td className="px-6 py-4 whitespace-nowrap font-medium">
                         {new Date(letter.createdAt).toLocaleDateString("id-ID", {
                           day: "2-digit", month: "short", year: "numeric",
@@ -186,9 +189,9 @@ export function MahasiswaLetterList() {
                       </td>
                       <td className="px-6 py-4 text-center">
                         <Link href={`/mahasiswa/surat/${letter._id}`}>
-                          <span className="text-xs font-black text-primary hover:underline cursor-pointer px-2 py-1 bg-primary/5 rounded-md hover:bg-primary/10 transition-colors">
-                            Lihat Detail
-                          </span>
+                          <Button variant="outline" size="sm" className="text-xs font-bold cursor-pointer h-8 border-border/50 shadow-sm">
+                            Detail
+                          </Button>
                         </Link>
                       </td>
                     </tr>

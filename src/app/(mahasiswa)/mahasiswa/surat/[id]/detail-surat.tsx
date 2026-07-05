@@ -89,6 +89,7 @@ export function DetailSuratClient({ letterId }: Props) {
       // Picu revalidasi cache SWR untuk memperbarui tabel data
       mutate(`/api/mahasiswa/letters/${letterId}`);
     } catch (err: unknown) {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       const errorMessage = err instanceof Error ? err.message : "Gagal menunjuk delegasi";
       toast.error(errorMessage);
     } finally {
