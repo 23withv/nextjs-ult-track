@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import axios from "axios";
+import Image from "next/image";
+import { UploadCloud } from "lucide-react";
 import { AdminLetterListItem } from "@/types/response/admin/letter";
 
 import { Button } from "@/components/ui/button";
@@ -29,10 +31,35 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
 
   const [takenByOption, setTakenByOption] = useState<"pemohon_langsung" | "delegasi">("pemohon_langsung");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    if (selectedFile) {
+      setPreviewUrl(URL.createObjectURL(selectedFile));
+    } else {
+      setPreviewUrl(null);
+    }
+  };
+
+  const handleClearFile = () => {
+    setFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+  };
 
   const handleClose = () => {
     setTakenByOption("pemohon_langsung");
-    setFile(null);
+    handleClearFile();
     onClose();
   };
 
@@ -71,6 +98,7 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
       mutate((key) => Array.isArray(key) && key[0] === "/api/admin/letters");
       handleClose();
     } catch {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       toast.error("Gagal memproses penyerahan dokumen");
     } finally {
       setIsLoading(false);
@@ -81,7 +109,7 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Penyerahan Dokumen</DialogTitle>
           <DialogDescription>
@@ -137,14 +165,69 @@ export function AdminHandoverDialog({ letter, isOpen, onClose }: Props) {
 
           <div className="space-y-2 pt-2 border-t border-border/50">
             <Label className="font-bold">Foto Bukti Pengambilan (Opsional)</Label>
-            <Input
-              type="file"
-              accept="image/png, image/jpeg, image/jpg"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              disabled={isLoading}
-              className="cursor-pointer"
-            />
-            <p className="text-xs text-muted-foreground">Maksimal 10MB. Format JPG/PNG.</p>
+            
+            {previewUrl ? (
+              <div className="relative w-full rounded-md border border-border/50 overflow-hidden bg-muted/30">
+                <div className="relative aspect-video w-full">
+                  <Image 
+                    src={previewUrl} 
+                    alt="Preview Bukti Pengambilan" 
+                    fill 
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex justify-between items-center p-2 bg-background border-t border-border/50">
+                  <span className="text-xs truncate max-w-[200px] text-muted-foreground font-medium">
+                    {file?.name}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="text-xs h-7 px-2"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isLoading}
+                    >
+                      Ganti
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="destructive" 
+                      className="text-xs h-7 px-2"
+                      onClick={handleClearFile}
+                      disabled={isLoading}
+                    >
+                      Hapus
+                    </Button>
+                  </div>
+                </div>
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={handleFileChange}
+                  disabled={isLoading}
+                  className="hidden"
+                />
+              </div>
+            ) : (
+              <div 
+                className="border-2 border-dashed border-border/50 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-muted/50 transition-colors cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <UploadCloud className="w-8 h-8 text-muted-foreground mb-2" />
+                <p className="text-sm font-medium mb-1">Klik untuk mengunggah foto</p>
+                <p className="text-xs text-muted-foreground">Maksimal 10MB. Format JPG/PNG.</p>
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={handleFileChange}
+                  disabled={isLoading}
+                  className="hidden"
+                />
+              </div>
+            )}
           </div>
         </div>
 

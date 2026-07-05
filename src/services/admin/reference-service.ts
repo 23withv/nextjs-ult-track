@@ -19,6 +19,11 @@ export const createReferenceServer = async (type: "unit" | "letterType", name: s
     await connectDB();
     const Model = type === "unit" ? UnitModel : LetterTypeModel;
     
+    // Validasi struktur payload menggunakan skema Zod
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      throw new SetError("Nama referensi tidak valid", 400);
+    }
+    
     // Jalankan query validasi duplikasi referensi di MongoDB
     const exists = await Model.findOne({ name, isDeleted: { $ne: true } });
     if (exists) throw new SetError("Nama referensi sudah terdaftar", 400);
@@ -33,6 +38,11 @@ export const softDeleteReferenceServer = async (type: "unit" | "letterType", id:
   return await APIHandler(async () => {
     await connectDB();
     const Model = type === "unit" ? UnitModel : LetterTypeModel;
+
+    // Validasi struktur payload menggunakan skema Zod
+    if (!id || typeof id !== "string") {
+      throw new SetError("ID referensi tidak valid", 400);
+    }
 
     // Jalankan query update untuk soft delete referensi di MongoDB
     const result = await Model.findByIdAndUpdate(id, { isDeleted: true });

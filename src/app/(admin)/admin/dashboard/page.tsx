@@ -1,9 +1,4 @@
-import { Metadata } from "next";
 import { AdminDashboardClient } from "./admin-dashboard";
-
-export const metadata: Metadata = {
-  title: "Dasbor Utama | Admin ULT-Track",
-};
 
 export default function AdminDashboardPage() {
   return (

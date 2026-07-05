@@ -10,13 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { ClientPagination } from "@/components/shared/client-pagination";
 import { PRODI_MAP } from "./register-form";
 
 export function MahasiswaList() {
@@ -175,6 +169,7 @@ export function MahasiswaList() {
                 <table className="w-full text-sm text-left">
                   <thead className="bg-muted text-muted-foreground uppercase text-xs font-bold border-b border-border/50">
                     <tr>
+                      <th className="px-6 py-4 w-16 text-center">No</th>
                       <th className="px-6 py-4">NIM</th>
                       <th className="px-6 py-4">Nama Lengkap</th>
                       <th className="px-6 py-4">Jurusan</th>
@@ -183,8 +178,11 @@ export function MahasiswaList() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/50">
-                    {data.map((mhs) => (
+                    {data.map((mhs, index) => (
                       <tr key={mhs._id} className="hover:bg-muted/50 transition-colors">
+                        <td className="px-6 py-4 text-center text-muted-foreground font-medium">
+                          {(currentPage - 1) * 10 + index + 1}
+                        </td>
                         <td className="px-6 py-4 font-medium">{mhs.nim}</td>
                         <td className="px-6 py-4">
                           <div className="flex flex-col">
@@ -207,31 +205,12 @@ export function MahasiswaList() {
             </CardContent>
           </Card>
 
-          {meta.totalPages > 1 && (
-            <Pagination className="justify-end">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1); }}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <span className="text-sm font-medium px-4 text-muted-foreground">
-                    Halaman {meta.currentPage} dari {meta.totalPages}
-                  </span>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); if (currentPage < meta.totalPages) setCurrentPage(currentPage + 1); }}
-                    className={currentPage === meta.totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
+          <ClientPagination
+            currentPage={meta.currentPage}
+            totalPages={meta.totalPages}
+            onPageChange={(p) => setCurrentPage(p)}
+            className="justify-end mt-4"
+          />
         </>
       )}
     </div>

@@ -94,6 +94,7 @@ export function RegisterForm() {
       );
 
     } catch (error: unknown) {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       const err = error as Error;
       toast.error(err.message);
     } finally {
@@ -179,7 +180,7 @@ export function RegisterForm() {
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer focus:outline-none"
                 disabled={isLoading}
               >
                 {showPassword ? (

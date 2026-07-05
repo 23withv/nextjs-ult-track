@@ -53,6 +53,7 @@ export function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link
                     href={
+                      // Verifikasi sesi aktif dan otorisasi role pengguna
                       session.user.role === "admin_ult"
                         ? "/admin/dashboard"
                         : "/mahasiswa/dashboard"

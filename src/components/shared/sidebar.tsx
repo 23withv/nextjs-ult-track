@@ -38,6 +38,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/mahasiswa/delegate", label: "Delegasi", icon: User },
   ]
 
+  // Verifikasi sesi aktif dan otorisasi role pengguna
   const links = role === "admin" ? adminLinks : mahasiswaLinks
 
   return (

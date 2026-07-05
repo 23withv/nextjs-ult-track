@@ -1,6 +1,12 @@
 import { Footer } from "@/components/shared/footer"
 import { Navbar } from "@/components/shared/navbar"
 import { Sidebar } from "@/components/shared/sidebar"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dasbor Mahasiswa",
+  description: "Halaman Mahasiswa",
+};
 
 export default function MahasiswaLayout({
   children,

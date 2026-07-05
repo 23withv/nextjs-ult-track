@@ -65,6 +65,7 @@ export function AdminProcessDialog({ letter, isOpen, onClose }: Props) {
       mutate((key) => Array.isArray(key) && key[0] === "/api/admin/letters");
       handleClose();
     } catch {
+      // Tangkap dan terjemahkan error mentah untuk dikembalikan ke UI
       toast.error("Gagal memperbarui status surat");
     } finally {
       setIsLoading(false);

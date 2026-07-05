@@ -1,11 +1,5 @@
-import { Metadata } from "next";
 import { CreateLetterForm } from "./create-letter-form";
 import { MahasiswaLetterList } from "./mahasiswa-letter-list";
-
-export const metadata: Metadata = {
-  title: "Pengajuan Surat | ULT-Track",
-  description: "Ajukan surat baru dan pantau status dokumen Anda.",
-};
 
 export default function SuratMahasiswaPage() {
   return (

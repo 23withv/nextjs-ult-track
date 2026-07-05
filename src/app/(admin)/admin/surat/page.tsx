@@ -1,10 +1,4 @@
-import { Metadata } from "next";
 import { AdminLetterList } from "./admin-letter-list";
-
-export const metadata: Metadata = {
-  title: "Antrean Surat | Admin ULT-Track",
-  description: "Kelola antrean pengajuan surat dan perbarui status dokumen mahasiswa.",
-};
 
 export default function AdminSuratPage() {
   return (
