@@ -1,0 +1,32 @@
+import { Footer } from "@/components/shared/footer"
+import { Navbar } from "@/components/shared/navbar"
+import { Sidebar } from "@/components/shared/sidebar"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dasbor Admin",
+  description: "Halaman Admin",
+};
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex h-screen bg-muted/20 overflow-hidden">
+      <Sidebar role="admin" />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Navbar />
+
+        <div className="flex-1 flex flex-col overflow-y-auto bg-background">
+          <main className="flex-1 px-4 py-6 md:p-6">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        
+      </div>
+    </div>
+  )
+}
